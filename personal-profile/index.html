@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Personal Profile of Suad Macaulay" />
+    <title>Personal Profile | Suad Macaulay</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="container">
+        <h1 class="logo">Sessy</h1>
+        <nav aria-label="Main Navigation">
+          <ul class="nav-menu">
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#schedule">Schedule</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <section id="about" class="about-section container">
+        <div class="bio-content">
+          <h2>Hello, I'm Suad</h2>
+          <p>
+            I am a passionate software developer currently participating in the
+            Women Techsters Sprint. I love building intuitive, accessible, and
+            clean web applications. I am pivoting into full-stack development to
+            bring my ideas to life on the web.
+          </p>
+        </div>
+        <div class="profile-image-container">
+          <img
+            src="my-dp.jpg"
+            alt="Suad smiling, wearing a brown long sleeve with a nose ring and a necklace, looking directly at the camera"
+            class="profile-photo"
+          />
+        </div>
+      </section>
+
+      <section id="skills" class="skills-section">
+        <div class="container">
+          <h2>My Skills & Goals</h2>
+          <div class="skills-grid">
+            <div class="skill-card">
+              <h3>HTML & CSS</h3>
+              <p>Building semantic, accessible, and responsive layouts.</p>
+            </div>
+            <div class="skill-card">
+              <h3>JavaScript</h3>
+              <p>Adding interactivity and logic to web applications.</p>
+            </div>
+            <div class="skill-card">
+              <h3>React.js</h3>
+              <p>Goal: Master component-based architecture for modern UIs.</p>
+            </div>
+            <div class="skill-card">
+              <h3>UI/UX Design</h3>
+              <p>Creating clean, modern, and user-centric interfaces.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="schedule" class="schedule-section container">
+        <h2>Weekly Study Plan</h2>
+        <div class="table-container">
+          <table>
+            <caption>
+              My learning schedule for the Women Techsters Sprint
+            </caption>
+            <thead>
+              <tr>
+                <th scope="col">Day</th>
+                <th scope="col">Topic</th>
+                <th scope="col">Duration</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <th scope="row">Monday</th>
+                <td>React</td>
+                <td>2 Hours</td>
+              </tr>
+              <tr>
+                <th scope="row">Tuesday</th>
+                <td>Work on my side projects</td>
+                <td>3 Hours</td>
+              </tr>
+              <tr>
+                <th scope="row">Wednesday</th>
+                <td>Do a little research</td>
+                <td>3 Hours</td>
+              </tr>
+              <tr>
+                <th scope="row">Thursday</th>
+                <td>Continue with my side project</td>
+                <td>2 Hours</td>
+              </tr>
+              <tr>
+                <th scope="row">Friday</th>
+                <td>Learn system engineering</td>
+                <td>4 Hours</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <section id="contact" class="contact-section">
+        <div class="container">
+          <h2>Get In Touch</h2>
+          <form action="#" method="POST" class="contact-form">
+            <div class="form-group">
+              <label for="name">Full Name</label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                required
+                placeholder="e.g. John Smith"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="email">Email Address</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                required
+                placeholder="e.g. john@example.com"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="message">Your Message</label>
+              <textarea
+                id="message"
+                name="message"
+                rows="5"
+                required
+                placeholder="Hello! I would like to talk about..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="submit-btn">Send Message</button>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container">
+        <p>&copy; 2026 Sessy. Built for Women Techsters Sprint.</p>
+      </div>
+    </footer>
+  </body>
+</html>
