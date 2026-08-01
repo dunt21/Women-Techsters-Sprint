@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Simple To-Do List</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="todo-container">
+      <header>
+        <h1>My Tasks</h1>
+      </header>
+
+      <form id="todo-form" class="input-section">
+        <input
+          type="text"
+          id="todo-input"
+          placeholder="What needs to be done?"
+          autocomplete="off"
+        />
+        <button type="submit" id="add-btn">Add</button>
+      </form>
+
+      <ul id="todo-list" class="todo-list">
+        <!-- 
+            Example of what a rendered task item should look like in your JavaScript:
+            
+            <li class="todo-item completed">
+                <label class="todo-label">
+                    <input type="checkbox" class="todo-checkbox" data-id="1" checked>
+                    <span class="todo-text">Learn JavaScript</span>
+                </label>
+                <button class="delete-btn" data-id="1" aria-label="Delete task">×</button>
+            </li> 
+            -->
+      </ul>
+
+      <footer class="todo-footer">
+        <span id="task-count">0 items left</span>
+        <div class="filters">
+          <button class="filter-btn active" data-filter="all">All</button>
+          <button class="filter-btn" data-filter="active">Active</button>
+          <button class="filter-btn" data-filter="completed">Completed</button>
+        </div>
+      </footer>
+    </main>
+
+    <script src="script.js"></script>
+  </body>
+</html>

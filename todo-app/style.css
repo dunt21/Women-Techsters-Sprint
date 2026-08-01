@@ -1,0 +1,182 @@
+:root {
+  --bg-color: #f0fdf4;
+  --card-bg: #ffffff;
+  --text-main: #334155;
+  --text-muted: #94a3b8;
+  --primary-green: #4ade80;
+  --border-color: #e2e8f0;
+  --danger: #ef4444;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  background-color: var(--bg-color);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 5rem;
+  color: var(--text-main);
+}
+
+.todo-container {
+  background-color: var(--card-bg);
+  width: 100%;
+  max-width: 500px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+header {
+  padding: 1.5rem 1.5rem 1rem;
+  text-align: center;
+}
+
+header h1 {
+  font-size: 1.75rem;
+  color: var(--primary-green);
+  font-weight: 600;
+}
+
+.input-section {
+  display: flex;
+  padding: 0 1.5rem 1.5rem;
+  gap: 0.5rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+#todo-input {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+#todo-input:focus {
+  border-color: var(--primary-green);
+}
+
+#add-btn {
+  padding: 0.75rem 1.5rem;
+  background-color: var(--primary-green);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+#add-btn:hover {
+  background-color: #22c55e;
+}
+
+.todo-list {
+  list-style: none;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color 0.2s;
+}
+
+.todo-item:hover {
+  background-color: #f8fafc;
+}
+
+.todo-label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  cursor: pointer;
+  flex: 1;
+}
+
+.todo-checkbox {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--primary-green);
+  cursor: pointer;
+}
+
+.todo-text {
+  font-size: 1rem;
+  transition:
+    color 0.2s,
+    text-decoration 0.2s;
+}
+
+/* Completed state */
+.todo-item.completed .todo-text {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.delete-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0 0.5rem;
+  transition: color 0.2s;
+}
+
+.delete-btn:hover {
+  color: var(--danger);
+}
+
+/* Footer Styles */
+.todo-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1.5rem;
+  background-color: #f8fafc;
+  font-size: 0.875rem;
+  color: var(--text-muted);
+}
+
+.filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.filter-btn {
+  background: none;
+  border: 1px solid transparent;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 0.875rem;
+  transition: all 0.2s;
+}
+
+.filter-btn:hover {
+  color: var(--text-main);
+}
+
+.filter-btn.active {
+  border-color: var(--primary-green);
+  color: var(--primary-green);
+}
