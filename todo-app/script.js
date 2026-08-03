@@ -24,10 +24,9 @@ function renderList(text, index) {
   );
 }
 
-function updateCount(id) {
-  const elId = id - 1;
-  const count = taskArr.filter((_, i) => i !== elId);
-  taskCount.textContent = `${count.length} items left`;
+function updateCount() {
+  const activeTasks = todoList.querySelectorAll("li:not(.completed)").length;
+  taskCount.textContent = `${activeTasks} items left`;
 }
 
 function addTask() {
@@ -40,13 +39,15 @@ function addTask() {
     renderList(mainT, taskArr.length);
   }
 
-  taskCount.textContent = `${taskArr.length} items left`;
+  updateCount();
 }
 
 function checkTask(e) {
   if (e.target.classList.contains("todo-checkbox")) {
     const li = e.target.closest("li");
     li.classList.toggle("completed");
+
+    updateCount();
   }
 }
 
@@ -57,7 +58,7 @@ function deleteTask(e) {
     const li = e.target.closest("li");
     li.remove();
 
-    updateCount(id);
+    updateCount();
   }
 }
 
@@ -72,8 +73,8 @@ function filterActiveTasks() {
 
       li.style.display = "none";
 
-      updateCount(id);
-    }
+      updateCount();
+    } else li.style.display = "flex";
   }
 }
 
@@ -87,8 +88,8 @@ function filterCompletedTasks() {
       const id = li.querySelector("input").dataset.id;
 
       li.style.display = "none";
-      taskCount.textContent = `${taskArr.length} items left`;
-    }
+      updateCount();
+    } else li.style.display = "flex";
   }
 }
 
@@ -98,6 +99,8 @@ function filterAllTasks() {
   for (let li of tasks) {
     li.style.display = "flex";
   }
+
+  updateCount();
 }
 
 form.addEventListener("submit", function (e) {
