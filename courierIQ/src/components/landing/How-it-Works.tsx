@@ -29,7 +29,7 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section className="py-24 relative overflow-hidden bg-background w-full">
+    <section id="how-it-works" className="py-24 relative overflow-hidden bg-background w-full">
       {/* Centered Heading */}
       <div className="container mx-auto px-6 md:px-12 max-w-7xl mb-16 relative z-10">
         <div className="text-center flex flex-col items-center">
@@ -53,7 +53,7 @@ const HowItWorks = () => {
               <div className="absolute inset-10 bg-[#c2dfe3] rounded-full blur-[80px] opacity-40 translate-x-1/4"></div>
             </div>
 
-            {/* Phone & Scooter 3D Illustration */}
+            {/* Phone  Illustration */}
             <img
               src="/courier-mockup.png"
               alt="CourierIQ Delivery Flow"

@@ -1,18 +1,17 @@
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { IoMenu } from "react-icons/io5";
 
 const Navbar = () => {
   const navLinks = [
-    { name: "Home", path: "/" },
-    { name: "Features", path: "/features" },
-    { name: "How It Works", path: "/how-it-works" },
-    { name: "About", path: "/about" },
-    { name: "Contact", path: "/contact" },
+    { name: "Home", path: "/", type: "hash" },
+    { name: "Features", path: "/#features", type: "hash" },
+    { name: "How It Works", path: "/#how-it-works", type: "hash" },
+    { name: "About", path: "/about", type: "page" },
+    { name: "Contact", path: "/contact", type: "page" },
   ];
 
   return (
-    <nav className="w-full px-6 py-6 md:px-12 flex items-center justify-between bg-transparent">
-      {/* Logo */}
+    <nav className="sticky top-0 z-50 w-full px-6 py-2 md:px-12 flex items-center justify-between bg-background/60 backdrop-blur-md border-b border-border/40 transition-all shadow-xs">
       <div className="flex items-center">
         <Link
           to="/"
@@ -22,20 +21,38 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Center Navigation Links (Hidden on Mobile) */}
       <div className="hidden md:flex items-center gap-8">
-        {navLinks.map((item) => (
-          <Link
-            to={item.path}
-            className="text-[15px] font-medium text-foreground/80 hover:text-foreground transition-colors"
-            key={item.name}
-          >
-            {item.name}
-          </Link>
-        ))}
+        {navLinks.map((item) => {
+          if (item.type === "hash") {
+            return (
+              <a
+                key={item.name}
+                href={item.path}
+                className="text-[15px] font-medium text-foreground/80 hover:text-foreground transition-colors"
+              >
+                {item.name}
+              </a>
+            );
+          }
+
+          return (
+            <NavLink
+              key={item.name}
+              to={item.path}
+              className={({ isActive }) =>
+                `text-[15px] transition-colors relative py-1 ${
+                  isActive
+                    ? "text-primary font-bold after:absolute after:bottom-0 after:left-0 after:w-full after:h-0.5 after:bg-primary"
+                    : "text-foreground/80 font-medium hover:text-foreground"
+                }`
+              }
+            >
+              {item.name}
+            </NavLink>
+          );
+        })}
       </div>
 
-      {/* Right Action Buttons */}
       <div className="hidden md:flex items-center gap-4">
         <Link
           to="/login"
