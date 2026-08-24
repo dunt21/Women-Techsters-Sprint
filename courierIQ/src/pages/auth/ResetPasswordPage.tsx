@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { AuthInput } from "../components/auth/AuthInput";
+import { AuthInput } from "@/components/auth/AuthInput";
 
 export const ResetPasswordPage = () => {
   return (
@@ -11,20 +11,23 @@ export const ResetPasswordPage = () => {
         Please enter your new password below.
       </p>
 
-      <form className="flex flex-col gap-4 w-full" onSubmit={(e) => e.preventDefault()}>
-        <AuthInput 
-          label="New Password" 
-          isPassword 
-          placeholder="Enter new password" 
+      <form
+        className="flex flex-col gap-4 w-full"
+        onSubmit={(e) => e.preventDefault()}
+      >
+        <AuthInput
+          label="New Password"
+          isPassword
+          placeholder="Enter new password"
         />
 
-        <AuthInput 
-          label="Confirm New Password" 
-          isPassword 
-          placeholder="Confirm new password" 
+        <AuthInput
+          label="Confirm New Password"
+          isPassword
+          placeholder="Confirm new password"
         />
-        
-        <button 
+
+        <button
           type="submit"
           className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-3.5 rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
         >

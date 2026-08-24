@@ -3,7 +3,7 @@ import { IoMenu } from "react-icons/io5";
 
 const Navbar = () => {
   const navLinks = [
-    { name: "Home", path: "/", type: "hash" },
+    { name: "Home", path: "/", type: "page" },
     { name: "Features", path: "/#features", type: "hash" },
     { name: "How It Works", path: "/#how-it-works", type: "hash" },
     { name: "About", path: "/about", type: "page" },
@@ -25,13 +25,13 @@ const Navbar = () => {
         {navLinks.map((item) => {
           if (item.type === "hash") {
             return (
-              <a
+              <Link
                 key={item.name}
-                href={item.path}
+                to={item.path}
                 className="text-[15px] font-medium text-foreground/80 hover:text-foreground transition-colors"
               >
                 {item.name}
-              </a>
+              </Link>
             );
           }
 
@@ -39,6 +39,12 @@ const Navbar = () => {
             <NavLink
               key={item.name}
               to={item.path}
+              onClick={() => {
+                // If they click "Home" while already on the home page, scroll to the top
+                if (item.path === "/") {
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+              }}
               className={({ isActive }) =>
                 `text-[15px] transition-colors relative py-1 ${
                   isActive

@@ -29,7 +29,10 @@ const HowItWorks = () => {
   ];
 
   return (
-    <section id="how-it-works" className="py-24 relative overflow-hidden bg-background w-full">
+    <section
+      id="how-it-works"
+      className="py-24 relative overflow-hidden bg-background w-full"
+    >
       {/* Centered Heading */}
       <div className="container mx-auto px-6 md:px-12 max-w-7xl mb-16 relative z-10">
         <div className="text-center flex flex-col items-center">
@@ -46,7 +49,7 @@ const HowItWorks = () => {
       <div className="container mx-auto px-6 md:px-12 max-w-7xl relative z-10">
         <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center">
           {/* Left Side: Phone Mockup Image with Glow */}
-          <div className="relative flex justify-center items-center w-full max-w-[550px] lg:max-w-[650px] xl:max-w-[700px] mx-auto lg:mx-0 lg:-ml-8">
+          <div className="relative flex justify-center items-center w-full max-w-137.5 lg:max-w-162.5 xl:max-w-175 mx-auto lg:mx-0 lg:-ml-8">
             {/* Soft background glows similar to Hero */}
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-[120%] pointer-events-none z-0">
               <div className="absolute inset-0 bg-[#e0fbfc] rounded-full blur-[90px] opacity-80"></div>
@@ -64,7 +67,7 @@ const HowItWorks = () => {
           {/* Right Side: Process Stepper */}
           <div className="relative pl-4 md:pl-0">
             {/* Vertical Line */}
-            <div className="absolute left-[27px] md:left-[60px] top-4 bottom-8 w-[2px] bg-gradient-to-b from-[#e0fbfc] via-[#c2dfe3] to-transparent z-0"></div>
+            <div className="absolute left-6.75 md:left-15 top-4 bottom-8 w-0.5 bg-linear-to-b from-[#e0fbfc] via-[#c2dfe3] to-transparent z-0"></div>
 
             <div className="space-y-10 relative z-10">
               {steps.map((step, index) => {
@@ -101,7 +104,7 @@ const HowItWorks = () => {
                       >
                         {step.title}
                       </h3>
-                      <p className="text-[#5c6b73] text-[15px] leading-relaxed max-w-[380px]">
+                      <p className="text-[#5c6b73] text-[15px] leading-relaxed max-w-95">
                         {step.description}
                       </p>
                     </div>

@@ -2,9 +2,33 @@ import { Link } from "react-router-dom";
 import { LuMail, LuArrowRight } from "react-icons/lu";
 
 const Footer = () => {
+  const footerLinks = [
+    {
+      title: "Product",
+      links: [
+        { name: "Features", path: "/#features" },
+        { name: "How It Works", path: "/#how-it-works" },
+      ],
+    },
+    {
+      title: "Company",
+      links: [
+        { name: "About", path: "/about" },
+        { name: "Contact", path: "/contact" },
+      ],
+    },
+    {
+      title: "Support",
+      links: [
+        { name: "FAQs", path: "/faqs" },
+        { name: "Contact", path: "/contact" },
+      ],
+    },
+  ];
+
   return (
     <footer className="w-full px-6 md:px-12 py-10 bg-background">
-      <div className="max-w-7xl mx-auto bg-gradient-to-b from-[#e0fbfc]/50 to-[#c2dfe3]/20 border border-[#c2dfe3]/40 rounded-[36px] md:rounded-[48px] p-8 md:p-12 lg:p-16 shadow-sm relative overflow-hidden">
+      <div className="max-w-7xl mx-auto bg-linear-to-b from-[#e0fbfc]/50 to-[#c2dfe3]/20 border border-[#c2dfe3]/40 rounded-[36px] md:rounded-[48px] p-8 md:p-12 lg:p-16 shadow-sm relative overflow-hidden">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 mb-12">
           <div className="lg:col-span-6 flex flex-col justify-between space-y-8">
             <div>
@@ -46,80 +70,25 @@ const Footer = () => {
 
           {/* Right Columns: Navigation Links */}
           <div className="lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8 pt-4 lg:pt-0">
-            {/* Product Column */}
-            <div className="flex flex-col space-y-4">
-              <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                Product
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <a
-                    href="#features"
-                    className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
-                  >
-                    Features
-                  </a>
-                </li>
-                <li>
-                  <a
-                    href="#how-it-works"
-                    className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
-                  >
-                    How It Works
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            {/* Company Column */}
-            <div className="flex flex-col space-y-4">
-              <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                Company
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    to="/about"
-                    className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
-                  >
-                    About
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/contact"
-                    className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            {/* Support Column */}
-            <div className="flex flex-col space-y-4">
-              <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
-                Support
-              </h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link
-                    to="/faqs"
-                    className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
-                  >
-                    FAQs
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    to="/contact"
-                    className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
+            {footerLinks.map((section, idx) => (
+              <div key={idx} className="flex flex-col space-y-4">
+                <h4 className="text-sm font-bold text-foreground uppercase tracking-wider">
+                  {section.title}
+                </h4>
+                <ul className="space-y-3">
+                  {section.links.map((link, linkIdx) => (
+                    <li key={linkIdx}>
+                      <Link
+                        to={link.path}
+                        className="text-sm text-[#5c6b73] hover:text-foreground font-medium transition-colors"
+                      >
+                        {link.name}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
           </div>
         </div>
 

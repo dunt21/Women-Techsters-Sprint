@@ -10,7 +10,10 @@ import {
 
 const Hero = () => {
   return (
-    <section className="relative w-full min-h-[85vh] flex items-center overflow-hidden bg-background pt-24 pb-16">
+    <section
+      id="/"
+      className="relative w-full min-h-[85vh] flex items-center overflow-hidden bg-background pt-24 pb-16"
+    >
       {/* Background Radial Glows */}
       <div className="absolute top-1/2 -translate-y-1/2 right-0 w-[800px] h-[800px] pointer-events-none z-0">
         <div className="absolute inset-0 bg-[#e0fbfc] rounded-full blur-[120px] opacity-70 translate-x-1/4"></div>

@@ -1,9 +1,11 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { LuCheck } from "react-icons/lu";
-import { AuthInput } from "../components/auth/AuthInput";
-import { GoogleButton } from "../components/auth/GoogleButton";
+import { AuthInput } from "@/components/auth/AuthInput";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 
 export const SignupPage = () => {
+  const navigate = useNavigate();
+
   return (
     <div className="flex flex-col w-full animate-fade-in-up">
       <h1 className="text-3xl font-bold tracking-tight text-foreground mb-2">
@@ -44,6 +46,7 @@ export const SignupPage = () => {
 
         <button
           type="submit"
+          onClick={() => navigate("/dashboard")}
           className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-3.5 rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
         >
           Sign up

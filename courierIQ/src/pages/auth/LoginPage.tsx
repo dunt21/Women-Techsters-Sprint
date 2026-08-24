@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { LuCheck } from "react-icons/lu";
-import { AuthInput } from "../components/auth/AuthInput";
-import { GoogleButton } from "../components/auth/GoogleButton";
+import { AuthInput } from "@/components/auth/AuthInput";
+import { GoogleButton } from "@/components/auth/GoogleButton";
 
 export const LoginPage = () => {
   return (
