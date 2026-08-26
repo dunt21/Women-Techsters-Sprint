@@ -1,0 +1,23 @@
+{
+  "success": true,
+  "message": "Login successful",
+  "data": {
+    "user": {
+      "id": 1,
+      "firstName": "Suad",
+      "lastName": "Macaulay",
+      "email": "suadmacaulay50@gmail.com",
+      "username": "suadM",
+      "role": "developer",
+      "isVerified": true,
+      "profile": {
+        "avatar": "/images/avatar.png",
+        "bio": "Software engineer and technology enthusiast"
+      }
+    },
+    "tokens": {
+      "accessToken": "mock-access-token-123456",
+      "refreshToken": "mock-refresh-token-789012"
+    }
+  }
+}
