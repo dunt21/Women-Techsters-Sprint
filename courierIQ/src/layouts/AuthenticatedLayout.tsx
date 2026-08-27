@@ -1,8 +1,13 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, Navigate } from "react-router-dom";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { ProfileDropdown } from "@/components/layout/ProfileDropdown";
+import { useAuth } from "@/context/AuthContext";
 
 export const AuthenticatedLayout = () => {
+  const { user } = useAuth();
+
+  if (!user) return <Navigate to={"/login"} />;
+
   return (
     <div className="flex h-screen w-full bg-slate-50 overflow-hidden">
       <Sidebar />

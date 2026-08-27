@@ -4,8 +4,8 @@
   "data": {
     "user": {
       "id": 1,
-      "firstName": "Suad",
-      "lastName": "Macaulay",
+      "name": "Suad Macaulay",
+      "password": "sessy",
       "email": "suadmacaulay50@gmail.com",
       "username": "suadM",
       "role": "developer",

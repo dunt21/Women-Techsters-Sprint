@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   LuUserRound,
   LuSettings,
@@ -7,10 +7,14 @@ import {
   LuCircle,
   LuChevronDown,
 } from "react-icons/lu";
+import { useAuth } from "@/context/AuthContext";
+import { Navii } from "@usenavii/react";
 
 export const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const dropdownLinks = [
     {
@@ -29,6 +33,11 @@ export const ProfileDropdown = () => {
       icon: <LuCircle className="w-4 h-4" />,
     },
   ];
+
+  const handleSignOut = () => {
+    logout();
+    navigate("/login");
+  };
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
@@ -52,11 +61,10 @@ export const ProfileDropdown = () => {
         className="flex items-center gap-3 bg-white border border-border/50 hover:bg-slate-50 transition-colors py-2 px-3 pl-2 rounded-full shadow-sm"
       >
         <div className="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center overflow-hidden shrink-0">
-          {/* Using a placeholder avatar or initials */}
-          <span className="text-sm font-bold">SM</span>
+          <Navii seed={user?.name || "default"} size={32} />
         </div>
         <span className="text-sm font-semibold text-foreground hidden sm:block">
-          Suad Macaulay
+          {user?.name}
         </span>
         <LuChevronDown
           className={`w-4 h-4 text-muted-foreground transition-transform hidden sm:block ${isOpen ? "rotate-180" : ""}`}
@@ -67,10 +75,11 @@ export const ProfileDropdown = () => {
       {isOpen && (
         <div className="absolute right-0 mt-3 w-64 bg-white rounded-2xl shadow-xl border border-border/40 py-2 z-50 animate-fade-in-up">
           {/* User Info Header */}
+
           <div className="px-5 py-3 border-b border-border/40 mb-2">
-            <p className="text-sm font-bold text-foreground">Suad Macaulay</p>
+            <p className="text-sm font-bold text-foreground"> {user?.name}</p>
             <p className="text-xs text-muted-foreground truncate">
-              suadmacaulay50@gmail.com
+              {user?.email}
             </p>
           </div>
 
@@ -93,7 +102,7 @@ export const ProfileDropdown = () => {
             <button
               onClick={() => {
                 setIsOpen(false);
-                // Handle logout logic here
+                handleSignOut();
               }}
               className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-red-600 hover:bg-red-50 transition-colors"
             >
