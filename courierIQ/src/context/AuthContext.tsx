@@ -8,21 +8,38 @@ const AuthContext = createContext<any>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState(() => {
-    const userInfo = localStorage.getItem("user");
+    const sessionUser = sessionStorage.getItem("user");
+    if (sessionUser) return JSON.parse(sessionUser);
 
-    return userInfo ? JSON.parse(userInfo) : null;
+    const localUser = localStorage.getItem("user");
+    if (localUser) return JSON.parse(localUser);
+
+    return null;
   });
 
-  function login(userData, tokens: object) {
+  function login(userData, tokens?: object, rememberMe?: boolean) {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("tokens", JSON.stringify(tokens));
+
+    if (rememberMe === true) {
+      localStorage.setItem("rememberMe", "true");
+
+      localStorage.setItem("user", JSON.stringify(userData));
+      localStorage.setItem("tokens", JSON.stringify(tokens));
+    }
+    if (rememberMe === false) {
+      sessionStorage.setItem("rememberMe", "true");
+      sessionStorage.setItem("user", JSON.stringify(userData));
+      sessionStorage.setItem("tokens", JSON.stringify(tokens));
+    }
   }
 
   function logout() {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("tokens");
+
+    sessionStorage.removeItem("user");
+    sessionStorage.removeItem("tokens");
   }
 
   console.log(user);

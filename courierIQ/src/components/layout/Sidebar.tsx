@@ -4,10 +4,10 @@ import {
   LuArrowRightLeft,
   LuHistory,
   LuSettings,
-  LuCircle,
   LuBox,
   LuLogOut,
 } from "react-icons/lu";
+import { FiHelpCircle } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
 import { Navii } from "@usenavii/react";
 
@@ -47,7 +47,7 @@ export const Sidebar = () => {
     {
       name: "Help & Support",
       path: "/support",
-      icon: <LuCircle className="w-5 h-5" />,
+      icon: <FiHelpCircle className="w-5 h-5" />,
     },
   ];
 

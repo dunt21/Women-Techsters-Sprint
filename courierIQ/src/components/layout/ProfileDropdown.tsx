@@ -4,9 +4,9 @@ import {
   LuUserRound,
   LuSettings,
   LuLogOut,
-  LuCircle,
   LuChevronDown,
 } from "react-icons/lu";
+import { FiHelpCircle } from "react-icons/fi";
 import { useAuth } from "@/context/AuthContext";
 import { Navii } from "@usenavii/react";
 
@@ -30,7 +30,7 @@ export const ProfileDropdown = () => {
     {
       name: "Help Center",
       path: "/support",
-      icon: <LuCircle className="w-4 h-4" />,
+      icon: <FiHelpCircle className="w-4 h-4" />,
     },
   ];
 

@@ -1,7 +1,15 @@
 import { Outlet, Link } from "react-router-dom";
-import { LuBox } from "react-icons/lu"; // Just a placeholder icon for CourierIQ
+import { LuBox } from "react-icons/lu";
+import { useAuth } from "@/context/AuthContext";
+import { Navigate } from "react-router-dom";
 
 export const AuthLayout = () => {
+  const { user } = useAuth();
+
+  if (user) {
+    return <Navigate to={"/dashboard"} />;
+  }
+
   return (
     <div className="min-h-screen w-full flex bg-background">
       {/* Left Side - Brand/Image (Hidden on mobile) */}

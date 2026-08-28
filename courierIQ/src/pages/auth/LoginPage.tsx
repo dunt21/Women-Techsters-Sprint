@@ -1,17 +1,20 @@
 import { Link, useNavigate } from "react-router-dom";
-import { LuCheck } from "react-icons/lu";
+// import { LuCheck } from "react-icons/lu";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useFetch } from "@/hooks/hooks";
+import { useFetch } from "@/hooks/useFetch";
 import toast from "react-hot-toast";
+import { RememberMeCheckbox } from "@/components/auth/RememberMeCheckbox";
 
 export const LoginPage = () => {
   const [userInput, setUserInput] = useState({
     email: "",
     password: "",
   });
+  const [rememberMe, setRememberMe] = useState(false);
+  const [errors, setErrors] = useState({ email: "", password: "" });
 
   const { loading, isSuccess, data, simulateLogin } = useFetch();
   const { login } = useAuth();
@@ -19,16 +22,37 @@ export const LoginPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    setErrors({ email: "", password: "" });
+
+    if (!userInput.email.includes("@")) {
+      setErrors({
+        ...errors,
+        email: "Please enter a valid email",
+      });
+
+      return;
+    }
+
+    if (userInput.password.length !== 7) {
+      setErrors({
+        ...errors,
+        password: "Password must be 8 characters long",
+      });
+
+      return;
+    }
+
     simulateLogin(userInput);
   };
 
   useEffect(() => {
     if (isSuccess && data) {
-      login(data, data.tokens);
+      login(data.user, data.tokens, rememberMe);
       navigate("/dashboard");
       toast.success("Login succesful");
     }
-  }, [isSuccess, data, login, navigate]);
+  }, [isSuccess, data, login, navigate, rememberMe]);
 
   return (
     <div className="flex flex-col w-full animate-fade-in-up">
@@ -46,34 +70,31 @@ export const LoginPage = () => {
         <AuthInput
           label="Email"
           type="email"
+          name="email"
+          id="email"
+          error={errors.email}
           placeholder="Enter your email"
           value={userInput.email}
+          autoComplete="email"
           onChange={(e) =>
             setUserInput({ ...userInput, email: e.target.value })
           }
         />
         <AuthInput
           label="Password"
+          name="password"
+          id="password"
+          error={errors.password}
           isPassword
           placeholder="Enter your password"
           value={userInput.password}
+          autoComplete="current-password"
           onChange={(e) =>
             setUserInput({ ...userInput, password: e.target.value })
           }
         />
         <div className="flex items-center justify-between mt-1">
-          <label className="flex items-center gap-2 cursor-pointer group">
-            <div className="relative flex items-center justify-center">
-              <input
-                type="checkbox"
-                className="peer appearance-none w-5 h-5 border-2 border-border rounded-lg checked:bg-green-500 checked:border-green-500 transition-colors cursor-pointer"
-              />
-              <LuCheck className="absolute w-3.5 h-3.5 text-white opacity-0 peer-checked:opacity-100 pointer-events-none" />
-            </div>
-            <span className="text-[14px] text-foreground font-medium select-none">
-              Remember me
-            </span>
-          </label>
+          <RememberMeCheckbox checked={rememberMe} onChange={setRememberMe} />
 
           <Link
             to="/forgot-password"
