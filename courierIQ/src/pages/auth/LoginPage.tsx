@@ -20,7 +20,7 @@ export const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setErrors({ email: "", password: "" });
@@ -65,7 +65,7 @@ export const LoginPage = () => {
 
       <form
         className="flex flex-col gap-4 w-full"
-        onSubmit={(e) => handleSubmit(e)}
+        onSubmit={(e: React.SubmitEvent<HTMLFormElement>) => handleSubmit(e)}
       >
         <AuthInput
           label="Email"
@@ -76,7 +76,7 @@ export const LoginPage = () => {
           placeholder="Enter your email"
           value={userInput.email}
           autoComplete="email"
-          onChange={(e) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUserInput({ ...userInput, email: e.target.value })
           }
         />
@@ -89,7 +89,7 @@ export const LoginPage = () => {
           placeholder="Enter your password"
           value={userInput.password}
           autoComplete="current-password"
-          onChange={(e) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUserInput({ ...userInput, password: e.target.value })
           }
         />

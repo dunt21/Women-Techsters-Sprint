@@ -1,4 +1,4 @@
-import { LuMapPin, LuPackage, LuSearch } from "react-icons/lu";
+import { LuMapPin, LuPackage } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 

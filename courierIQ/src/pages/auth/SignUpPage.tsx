@@ -21,7 +21,7 @@ export const SignupPage = () => {
   const { loading, isSuccess, data, simulateSignUp } = useFetch();
   const { login } = useAuth();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setErrors({ name: "", email: "", password: "" });
@@ -84,7 +84,9 @@ export const SignupPage = () => {
           placeholder="Enter your name"
           value={userInput.name}
           autoComplete="name"
-          onChange={(e) => setUserInput({ ...userInput, name: e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            setUserInput({ ...userInput, name: e.target.value })
+          }
         />
 
         <AuthInput
@@ -96,7 +98,7 @@ export const SignupPage = () => {
           placeholder="Enter your email"
           value={userInput.email}
           autoComplete="email"
-          onChange={(e) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUserInput({ ...userInput, email: e.target.value })
           }
         />
@@ -111,7 +113,7 @@ export const SignupPage = () => {
           placeholder="Enter your password"
           value={userInput.password}
           autoComplete="new-password"
-          onChange={(e) =>
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUserInput({ ...userInput, password: e.target.value })
           }
         />

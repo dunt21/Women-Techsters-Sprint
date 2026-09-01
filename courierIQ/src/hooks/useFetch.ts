@@ -42,8 +42,10 @@ export const useFetch = () => {
       setIsSuccess(true);
       setSuccessMessage("Account Created Successfully 🥂");
     } catch (err) {
+      const error = err as Error;
+
       setIsError(true);
-      setErrMessage(err);
+      setErrMessage(error.message || "An error occured");
     } finally {
       setLoading(false);
     }
@@ -70,11 +72,11 @@ export const useFetch = () => {
         throw new Error("Login credentials do not match");
       }
     } catch (err) {
-      console.log("login failed");
+      const error = err as Error;
 
       setIsError(true);
-      setErrMessage(err.message);
-      toast.error(err.message);
+      setErrMessage(error.message || "An error occured");
+      toast.error(error.message || "An error occured");
     } finally {
       setLoading(false);
     }

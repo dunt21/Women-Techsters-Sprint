@@ -6,6 +6,12 @@ import type { ReactNode } from "react";
 
 const AuthContext = createContext<any>(null);
 
+interface userDataType {
+  name?: string;
+  email?: string;
+  password?: string;
+}
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState(() => {
     const sessionUser = sessionStorage.getItem("user");
@@ -17,7 +23,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return null;
   });
 
-  function login(userData, tokens?: object, rememberMe?: boolean) {
+  function login(
+    userData: userDataType,
+    tokens?: object,
+    rememberMe?: boolean,
+  ) {
     setUser(userData);
 
     if (rememberMe === true) {
