@@ -13,8 +13,8 @@ export const LoginPage = () => {
     email: "",
     password: "",
   });
-  const [rememberMe, setRememberMe] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
+  const [rememberMe, setRememberMe] = useState(false);
 
   const { loading, isSuccess, data, simulateLogin } = useFetch();
   const { login } = useAuth();

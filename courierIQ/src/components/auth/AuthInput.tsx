@@ -28,13 +28,13 @@ export const AuthInput = ({
       <label className="text-sm font-semibold text-foreground">{label}</label>
       <div className="relative flex items-center">
         <input
+          {...props}
           type={inputType}
           className={`w-full bg-white border text-foreground text-[15px] rounded-xl px-4 py-3.5 outline-none transition-all placeholder:text-muted-foreground shadow-sm ${
             error
               ? "border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
               : "border-border/60 hover:border-border/80 focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
           } ${isPassword ? "pr-12" : ""} ${className || ""}`}
-          {...props}
         />
 
         {isPassword && (

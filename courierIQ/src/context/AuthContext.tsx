@@ -42,7 +42,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     sessionStorage.removeItem("tokens");
   }
 
-  console.log(user);
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}

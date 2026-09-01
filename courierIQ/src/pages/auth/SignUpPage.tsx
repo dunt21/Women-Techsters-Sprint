@@ -3,11 +3,67 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 import { RememberMeCheckbox } from "@/components/auth/RememberMeCheckbox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useFetch } from "@/hooks/useFetch";
+import { useAuth } from "@/context/AuthContext";
+import toast from "react-hot-toast";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
+  const [userInput, setUserInput] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [errors, setErrors] = useState({ name: "", email: "", password: "" });
   const [rememberMe, setRememberMe] = useState(false);
+
+  const { loading, isSuccess, data, simulateSignUp } = useFetch();
+  const { login } = useAuth();
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    setErrors({ name: "", email: "", password: "" });
+
+    // 1. NAME VALIDATION
+    if (userInput.name.trim().length < 2) {
+      setErrors((prev) => ({
+        ...prev,
+        name: "Name must be at least 2 characters long",
+      }));
+      return;
+    }
+
+    // 2. EMAIL VALIDATION
+    if (!userInput.email.includes("@")) {
+      setErrors((prev) => ({
+        ...prev,
+        email: "Please enter a valid email",
+      }));
+      return;
+    }
+
+    // 3. PASSWORD VALIDATION
+    if (userInput.password.length < 8) {
+      setErrors((prev) => ({
+        ...prev,
+        password: "Password must be at least 8 characters long",
+      }));
+      return;
+    }
+
+    // If everything passes, simulate the signup!
+    simulateSignUp(userInput);
+  };
+
+  useEffect(() => {
+    if (isSuccess && data) {
+      login(data, "", rememberMe);
+      navigate("/dashboard");
+      toast.success("Account Created Successfully 🥂");
+    }
+  }, [isSuccess, data, navigate, login, rememberMe]);
 
   return (
     <div className="flex flex-col w-full animate-fade-in-up">
@@ -18,18 +74,46 @@ export const SignupPage = () => {
         Start comparing courier options and make smarter delivery choices.
       </p>
 
-      <form
-        className="flex flex-col gap-4 w-full"
-        onSubmit={(e) => e.preventDefault()}
-      >
-        <AuthInput label="Name" type="text" placeholder="Enter your name" />
+      <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
+        <AuthInput
+          label="Name"
+          type="text"
+          name="name"
+          id="name"
+          error={errors.name}
+          placeholder="Enter your name"
+          value={userInput.name}
+          autoComplete="name"
+          onChange={(e) => setUserInput({ ...userInput, name: e.target.value })}
+        />
 
-        <AuthInput label="Email" type="email" placeholder="Enter your email" />
+        <AuthInput
+          label="Email"
+          type="email"
+          name="email"
+          id="email"
+          error={errors.email}
+          placeholder="Enter your email"
+          value={userInput.email}
+          autoComplete="email"
+          onChange={(e) =>
+            setUserInput({ ...userInput, email: e.target.value })
+          }
+        />
 
         <AuthInput
           label="Password"
+          type="password"
+          name="password"
+          id="password"
+          error={errors.password}
           isPassword
           placeholder="Enter your password"
+          value={userInput.password}
+          autoComplete="new-password"
+          onChange={(e) =>
+            setUserInput({ ...userInput, password: e.target.value })
+          }
         />
 
         <div className="flex items-center justify-between mt-1">
@@ -38,10 +122,10 @@ export const SignupPage = () => {
 
         <button
           type="submit"
-          onClick={() => navigate("/dashboard")}
+          disabled={loading}
           className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-3.5 rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
         >
-          Sign up
+          {loading ? "Signing up..." : "Sign up"}
         </button>
       </form>
 
