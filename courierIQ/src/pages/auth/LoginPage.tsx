@@ -7,6 +7,7 @@ import { useAuth } from "@/context/AuthContext";
 import { useFetch } from "@/hooks/useFetch";
 import toast from "react-hot-toast";
 import { RememberMeCheckbox } from "@/components/auth/RememberMeCheckbox";
+import { Button } from "@/components/ui/button";
 
 export const LoginPage = () => {
   const [userInput, setUserInput] = useState({
@@ -103,13 +104,13 @@ export const LoginPage = () => {
             Forgot password?
           </Link>
         </div>
-        <button
+        <Button
           type="submit"
-          className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-3.5 rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
+          className="w-full h-14 bg-foreground hover:bg-foreground/90 text-background font-semibold rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
           disabled={loading}
         >
           {loading ? "Signing in ..." : "Sign in"}
-        </button>
+        </Button>
       </form>
 
       <div className="relative flex items-center justify-center w-full py-4 mt-1">

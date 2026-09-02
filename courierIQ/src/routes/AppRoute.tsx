@@ -10,6 +10,8 @@ import { AuthenticatedLayout } from "@/layouts/AuthenticatedLayout";
 import { ContactPage } from "@/pages/public/ContactPage";
 import { AboutPage } from "@/pages/public/AboutPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
+import { SettingsPage } from "@/pages/dashboard/SettingsPage";
+import { HistoryPage } from "@/pages/dashboard/HistoryPage";
 
 export const AppRoute = () => {
   const publicList = [
@@ -59,11 +61,11 @@ export const AppRoute = () => {
     },
     {
       path: "/history",
-      el: <div className="text-2xl font-bold">History Placeholder</div>,
+      el: <HistoryPage />,
     },
     {
       path: "/settings",
-      el: <div className="text-2xl font-bold">Settings Placeholder</div>,
+      el: <SettingsPage />,
     },
     {
       path: "/support",

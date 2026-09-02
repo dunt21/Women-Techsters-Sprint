@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { LuEye, LuEyeOff } from "react-icons/lu";
+import { Input } from "@/components/ui/input";
 
 interface AuthInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   label: string;
@@ -27,13 +28,13 @@ export const AuthInput = ({
     <div className="flex flex-col gap-1.5 w-full">
       <label className="text-sm font-semibold text-foreground">{label}</label>
       <div className="relative flex items-center">
-        <input
+        <Input
           {...props}
           type={inputType}
-          className={`w-full bg-white border text-foreground text-[15px] rounded-xl px-4 py-3.5 outline-none transition-all placeholder:text-muted-foreground shadow-sm ${
+          className={`bg-white border text-foreground text-[15px] rounded-xl px-4 h-14 outline-none transition-all placeholder:text-muted-foreground shadow-sm ${
             error
-              ? "border-red-500 focus:border-red-500 focus:ring-4 focus:ring-red-500/10"
-              : "border-border/60 hover:border-border/80 focus:border-primary/50 focus:ring-4 focus:ring-primary/10"
+              ? "border-red-500 focus-visible:border-red-500 focus-visible:ring-4 focus-visible:ring-red-500/10"
+              : "border-border/60 hover:border-border/80 focus-visible:border-primary/50 focus-visible:ring-4 focus-visible:ring-primary/10"
           } ${isPassword ? "pr-12" : ""} ${className || ""}`}
         />
 

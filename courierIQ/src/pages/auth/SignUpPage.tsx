@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { useFetch } from "@/hooks/useFetch";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -122,13 +123,13 @@ export const SignupPage = () => {
           <RememberMeCheckbox checked={rememberMe} onChange={setRememberMe} />
         </div>
 
-        <button
+        <Button
           type="submit"
           disabled={loading}
-          className="w-full bg-foreground hover:bg-foreground/90 text-background font-semibold py-3.5 rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
+          className="w-full h-14 bg-foreground hover:bg-foreground/90 text-background font-semibold rounded-full mt-2 transition-all shadow-md active:scale-[0.98]"
         >
           {loading ? "Signing up..." : "Sign up"}
-        </button>
+        </Button>
       </form>
 
       <div className="relative flex items-center justify-center w-full py-4 mt-1">

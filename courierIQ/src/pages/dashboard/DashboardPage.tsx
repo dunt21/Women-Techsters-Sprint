@@ -1,6 +1,7 @@
 import { LuMapPin, LuPackage } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
+import { Button } from "@/components/ui/button";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
@@ -220,12 +221,12 @@ export const DashboardPage = () => {
                 rates across all carriers instantly.
               </p>
 
-              <Link
-                to="/compare"
-                className="inline-flex items-center justify-center px-8 py-3.5 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-100 transition-colors active:scale-95 shadow-lg w-fit"
+              <Button
+                asChild
+                className="inline-flex items-center justify-center px-8 h-12 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-100 transition-colors shadow-lg w-fit"
               >
-                Compare Now
-              </Link>
+                <Link to="/compare">Compare Now</Link>
+              </Button>
             </div>
           </div>
         </div>
