@@ -140,7 +140,7 @@ export const HistoryPage = () => {
           />
         </div>
         <div className="flex gap-4">
-          <Select defaultValue="all">
+          <Select defaultValue="All">
             <SelectTrigger className="w-40 h-12 bg-card border-border rounded-xl">
               <SelectValue placeholder="Couriers" />
             </SelectTrigger>
@@ -153,7 +153,7 @@ export const HistoryPage = () => {
             </SelectContent>
           </Select>
 
-          <Select defaultValue="all-time">
+          <Select defaultValue="All-time">
             <SelectTrigger className="w-35 h-12 bg-card border-border rounded-xl">
               <SelectValue placeholder="Time" />
             </SelectTrigger>
@@ -176,10 +176,10 @@ export const HistoryPage = () => {
             {mockHistoryItems.map((item) => (
               <div
                 key={item.id}
-                className={`p-5 flex items-center justify-between cursor-pointer transition-colors ${
+                className={`p-5 flex items-center justify-between cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
                   item.isActive
-                    ? "bg-secondary/40 border-l-4 border-l-blue-500"
-                    : "hover:bg-secondary/20 border-l-4 border-l-transparent"
+                    ? "bg-secondary/40 border-l-4 border-l-blue-500 shadow-sm"
+                    : "hover:bg-secondary/30 border-l-4 border-l-transparent"
                 }`}
               >
                 <div className="flex items-center gap-4">
@@ -235,9 +235,9 @@ export const HistoryPage = () => {
         <div className="xl:col-span-6 flex flex-col gap-6 bg-card border border-border rounded-2xl p-6 shadow-sm">
           {/* Header */}
           <div className="flex items-center justify-between mb-2">
-            <button className="flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
-              <LuChevronLeft className="w-4 h-4" /> Back to History
-            </button>
+            <p className="flex items-center gap-1 text-sm font-semibold text-muted-foreground hover:text-foreground transition-colors">
+              Details of Delivery
+            </p>
             <div className="hidden xl:block"></div>
             <span className="text-[13px] font-medium text-muted-foreground">
               Compared on Aug 30, 2026 at 10:45 AM
@@ -300,27 +300,29 @@ export const HistoryPage = () => {
               {mockComparisonResults.map((result) => (
                 <div
                   key={result.id}
-                  className={`flex items-center py-3 px-4 sm:px-5 ${
-                    result.tag === "Cheapest" ? "bg-emerald-50/40" : "bg-card"
+                  className={`flex items-center gap-3 py-3 px-4 sm:px-5 cursor-pointer transition-colors hover:bg-secondary/10 ${
+                    result.tag === "Cheapest"
+                      ? "bg-emerald-50/40 hover:bg-emerald-50/60"
+                      : "bg-card"
                   }`}
                 >
-                  <div className="flex items-center gap-3 sm:gap-4 w-40 sm:w-44 shrink-0">
+                  <div className="flex items-center gap-3 sm:gap-4 w-40 sm:w-32 shrink-0">
                     <div
                       className={`w-11 h-11 rounded-xl flex items-center justify-center font-black ${result.iconBg}`}
                     >
                       {result.iconLetter}
                     </div>
-                    <p className="font-bold text-sm sm:text-base text-foreground leading-[1.15] whitespace-pre-line">
+                    <p className="font-bold text-sm  text-foreground leading-[1.15] whitespace-pre-line">
                       {result.name.replace(" ", "\n")}
                     </p>
                   </div>
 
                   {/* Spacer to push everything else to the right */}
-                  <div className="flex-1"></div>
+                  {/* <div className="flex-1"></div> */}
 
                   <div className="w-16 sm:w-20 shrink-0 text-left">
                     <p
-                      className={`font-bold text-base sm:text-lg ${result.tag === "Cheapest" ? "text-emerald-700" : "text-foreground"}`}
+                      className={`font-bold text-base sm:text-md ${result.tag === "Cheapest" ? "text-emerald-700" : "text-foreground"}`}
                     >
                       {result.price}
                     </p>

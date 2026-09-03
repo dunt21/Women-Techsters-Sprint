@@ -12,6 +12,8 @@ import { AboutPage } from "@/pages/public/AboutPage";
 import { DashboardPage } from "@/pages/dashboard/DashboardPage";
 import { SettingsPage } from "@/pages/dashboard/SettingsPage";
 import { HistoryPage } from "@/pages/dashboard/HistoryPage";
+import { SupportPage } from "@/pages/dashboard/SupportPage";
+import { ComparePage } from "@/pages/dashboard/ComparePage";
 
 export const AppRoute = () => {
   const publicList = [
@@ -55,9 +57,7 @@ export const AppRoute = () => {
     },
     {
       path: "/compare",
-      el: (
-        <div className="text-2xl font-bold">Compare Delivery Placeholder</div>
-      ),
+      el: <ComparePage />,
     },
     {
       path: "/history",
@@ -69,7 +69,7 @@ export const AppRoute = () => {
     },
     {
       path: "/support",
-      el: <div className="text-2xl font-bold">Support Placeholder</div>,
+      el: <SupportPage />,
     },
   ];
 

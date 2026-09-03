@@ -10,7 +10,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import React from "react";
+import React, { type ReactNode } from "react";
+import type { IconType } from "react-icons/lib";
+
+interface SettingsSectionProps {
+  icon: IconType;
+  title: string;
+  description: string;
+  iconBg: string;
+  iconColor: string;
+  children: ReactNode;
+}
 
 // Reusable Section Wrapper
 const SectionCard = ({
@@ -20,8 +30,8 @@ const SectionCard = ({
   children,
   iconBg = "bg-blue-50",
   iconColor = "text-blue-600",
-}) => (
-  <div className="bg-card border border-border/60 rounded-[2rem] p-8 flex flex-col gap-8 shadow-sm relative w-full">
+}: SettingsSectionProps) => (
+  <div className="bg-card border border-border/60 rounded-[2rem] p-8 flex flex-col gap-8 shadow-sm relative w-full transition-all duration-300 hover:shadow-lg hover:border-border hover:-translate-y-1">
     <div className="flex items-start gap-4">
       <div
         className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${iconBg}`}
@@ -134,7 +144,7 @@ export const SettingsPage = () => {
       buttonText: "Sign Out",
       onClick: logout,
       btnClass:
-        "bg-background border-border hover:bg-secondary text-foreground",
+        "bg-background border-border hover:bg-secondary text-foreground hover:scale-105 transition-all shadow-sm",
       textClass: "text-muted-foreground",
       titleClass: "text-foreground",
     },
@@ -199,14 +209,14 @@ export const SettingsPage = () => {
                 <Input
                   type={field.type}
                   defaultValue={field.defaultValue}
-                  className="bg-background border-border text-foreground rounded-xl h-12 shadow-sm font-medium"
+                  className="bg-background border-border text-foreground rounded-xl h-12 shadow-sm font-medium hover:border-primary/40 focus:border-primary transition-colors"
                 />
               </div>
             ))}
         </div>
 
         <div className="flex justify-end mt-8 border-t border-border/50 pt-8">
-          <Button className="py-6 px-10 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] text-white shadow-md active:scale-95 transition-all text-[14px]">
+          <Button className="py-6 px-10 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] hover:-translate-y-1 hover:shadow-lg text-white shadow-md active:scale-95 transition-all text-[14px]">
             Save Changes
           </Button>
         </div>
@@ -228,12 +238,12 @@ export const SettingsPage = () => {
             <Input
               type="password"
               defaultValue="••••••••••••"
-              className="bg-background border-border text-foreground rounded-xl h-12 shadow-sm font-medium w-full"
+              className="bg-background border-border text-foreground rounded-xl h-12 shadow-sm font-medium w-full hover:border-primary/40 focus:border-primary transition-colors"
             />
           </div>
           <Button
             variant="outline"
-            className="h-12 px-6 rounded-xl font-bold bg-background border-border hover:bg-secondary shrink-0 text-[13px] shadow-sm mt-0 sm:mt-7 w-full sm:w-auto"
+            className="h-12 px-6 rounded-xl font-bold bg-background border-border hover:bg-secondary shrink-0 text-[13px] shadow-sm mt-0 sm:mt-7 w-full sm:w-auto hover:scale-105 transition-all"
           >
             <LuShield className="w-4 h-4 mr-2" /> Change Password
           </Button>

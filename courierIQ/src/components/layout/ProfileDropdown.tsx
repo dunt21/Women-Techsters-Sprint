@@ -19,7 +19,7 @@ export const ProfileDropdown = () => {
   const dropdownLinks = [
     {
       name: "Profile",
-      path: "/profile",
+      path: "/settings",
       icon: <LuUserRound className="w-4 h-4" />,
     },
     {

@@ -1,7 +1,7 @@
 import { LuMapPin, LuPackage } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-import { Button } from "@/components/ui/button";
+// import { Button } from "@/components/ui/button";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
@@ -61,7 +61,7 @@ export const DashboardPage = () => {
   ];
 
   return (
-    <div className="w-full flex flex-col gap-10 max-w-[1200px] mx-auto animate-fade-in-up">
+    <div className="w-full flex flex-col gap-10 max-w-300 mx-auto animate-fade-in-up">
       {/* Title */}
       <div className="flex flex-col mb-2">
         <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
@@ -76,7 +76,7 @@ export const DashboardPage = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Big Card - Realistic Map & Recent Delivery */}
         <div
-          className="col-span-1 lg:col-span-2 rounded-[2rem] border border-slate-200 relative overflow-hidden flex flex-col justify-end p-6 min-h-[300px] shadow-inner bg-cover bg-center"
+          className="col-span-1 lg:col-span-2 rounded-[2rem] border border-slate-200 relative overflow-hidden flex flex-col justify-end p-6 min-h-75 shadow-inner bg-cover bg-center"
           style={{ backgroundImage: `url('/assets/map_bg.jpg')` }}
         >
           {/* Dark Overlay to make text readable if map is bright */}
@@ -120,7 +120,7 @@ export const DashboardPage = () => {
           {summaryCards.map((card) => (
             <div
               key={card.id}
-              className={`${card.bgClass} rounded-[2rem] p-6 border flex-1 flex flex-col`}
+              className={`${card.bgClass} rounded-[2rem] p-6 border flex-1 flex flex-col hover:-translate-y-2 hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer`}
             >
               <div className="flex justify-between items-start mb-auto">
                 <div>
@@ -164,7 +164,7 @@ export const DashboardPage = () => {
             {recentComparisons.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-md transition-shadow cursor-pointer group"
+                className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-xl hover:border-slate-300 hover:-translate-y-1 transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-5">
                   <div
@@ -221,12 +221,12 @@ export const DashboardPage = () => {
                 rates across all carriers instantly.
               </p>
 
-              <Button
-                asChild
-                className="inline-flex items-center justify-center px-8 h-12 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-100 transition-colors shadow-lg w-fit"
+              <Link
+                to="/compare"
+                className="inline-flex items-center justify-center px-8 h-12 bg-white text-slate-900 font-bold rounded-full hover:bg-slate-100 hover:scale-105 transition-all shadow-lg hover:shadow-xl w-fit"
               >
-                <Link to="/compare">Compare Now</Link>
-              </Button>
+                Compare Now
+              </Link>
             </div>
           </div>
         </div>
