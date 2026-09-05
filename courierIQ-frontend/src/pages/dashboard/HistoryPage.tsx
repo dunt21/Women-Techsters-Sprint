@@ -96,7 +96,7 @@ const mockComparisonResults = [
     eta: "~40 min",
     iconBg: "bg-emerald-500 text-white text-sm",
     iconLetter: "Bolt",
-    tag: "Fastest",
+    tag: "Standard",
   },
 ];
 
@@ -144,7 +144,7 @@ export const HistoryPage = () => {
             <SelectTrigger className="w-40 h-12 bg-card border-border rounded-xl">
               <SelectValue placeholder="Couriers" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
               {courierOptions.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -157,7 +157,7 @@ export const HistoryPage = () => {
             <SelectTrigger className="w-35 h-12 bg-card border-border rounded-xl">
               <SelectValue placeholder="Time" />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
               {timeOptions.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -178,7 +178,7 @@ export const HistoryPage = () => {
                 key={item.id}
                 className={`p-5 flex items-center justify-between cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md ${
                   item.isActive
-                    ? "bg-secondary/40 border-l-4 border-l-blue-500 shadow-sm"
+                    ? "bg-secondary/70 border-l-4 border-l-blue-500 shadow-sm"
                     : "hover:bg-secondary/30 border-l-4 border-l-transparent"
                 }`}
               >
@@ -300,11 +300,7 @@ export const HistoryPage = () => {
               {mockComparisonResults.map((result) => (
                 <div
                   key={result.id}
-                  className={`flex items-center gap-3 py-3 px-4 sm:px-5 cursor-pointer transition-colors hover:bg-secondary/10 ${
-                    result.tag === "Cheapest"
-                      ? "bg-emerald-50/40 hover:bg-emerald-50/60"
-                      : "bg-card"
-                  }`}
+                  className="flex items-center gap-3 py-3 px-4 sm:px-5 cursor-pointer transition-colors hover:bg-slate-50 bg-card"
                 >
                   <div className="flex items-center gap-3 sm:gap-4 w-40 sm:w-32 shrink-0">
                     <div
@@ -321,9 +317,7 @@ export const HistoryPage = () => {
                   {/* <div className="flex-1"></div> */}
 
                   <div className="w-16 sm:w-20 shrink-0 text-left">
-                    <p
-                      className={`font-bold text-base sm:text-md ${result.tag === "Cheapest" ? "text-emerald-700" : "text-foreground"}`}
-                    >
+                    <p className="font-bold text-base sm:text-md text-foreground">
                       {result.price}
                     </p>
                   </div>
@@ -343,7 +337,9 @@ export const HistoryPage = () => {
                         className={`inline-flex items-center justify-center px-2.5 h-6 text-xs font-bold rounded-md whitespace-nowrap ${
                           result.tag === "Cheapest"
                             ? "bg-emerald-100/80 text-emerald-700"
-                            : "bg-blue-50 text-blue-600"
+                            : result.tag === "Standard"
+                              ? "bg-slate-100 text-slate-600"
+                              : "bg-blue-50 text-blue-600"
                         }`}
                       >
                         {result.tag}
@@ -353,14 +349,8 @@ export const HistoryPage = () => {
 
                   <div className="shrink-0 ml-2">
                     <Button
-                      variant={
-                        result.tag === "Cheapest" ? "default" : "outline"
-                      }
-                      className={`h-9 px-5 rounded-lg font-bold text-sm w-20 ${
-                        result.tag === "Cheapest"
-                          ? "bg-slate-900 text-white hover:bg-slate-800"
-                          : "bg-card hover:bg-secondary text-foreground"
-                      }`}
+                      variant="outline"
+                      className="h-9 px-5 rounded-lg font-bold text-sm w-20 bg-card text-foreground hover:bg-[#3b41c5] hover:text-white hover:border-[#3b41c5] transition-colors"
                     >
                       Select
                     </Button>

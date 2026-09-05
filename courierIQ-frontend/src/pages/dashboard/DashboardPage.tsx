@@ -83,7 +83,7 @@ export const DashboardPage = () => {
           <div className="absolute inset-0 bg-black/10 z-0"></div>
 
           {/* Floating Card for Recent Delivery Choice */}
-          <div className="relative z-10 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/60 shadow-xl max-w-sm transition-transform hover:-translate-y-1">
+          <div className="relative z-10 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/60 shadow-xl max-w-sm">
             <div className="flex items-center gap-4 mb-4">
               <div className="bg-emerald-100 text-emerald-600 p-3 rounded-xl shadow-sm">
                 <LuPackage className="w-6 h-6" />
@@ -120,7 +120,7 @@ export const DashboardPage = () => {
           {summaryCards.map((card) => (
             <div
               key={card.id}
-              className={`${card.bgClass} rounded-[2rem] p-6 border flex-1 flex flex-col hover:-translate-y-2 hover:shadow-xl hover:border-primary/20 transition-all duration-300 cursor-pointer`}
+              className={`${card.bgClass} rounded-[2rem] p-6 border flex-1 flex flex-col transition-all duration-300 cursor-pointer`}
             >
               <div className="flex justify-between items-start mb-auto">
                 <div>
@@ -164,7 +164,7 @@ export const DashboardPage = () => {
             {recentComparisons.map((item) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-xl hover:border-slate-300 hover:-translate-y-1 transition-all cursor-pointer group"
+                className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-sm hover:border-slate-200 transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-5">
                   <div

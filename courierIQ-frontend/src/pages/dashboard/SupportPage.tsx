@@ -152,7 +152,7 @@ export const SupportPage = () => {
             <SelectTrigger className="border-none bg-transparent h-auto py-0 shadow-none hover:bg-transparent focus:ring-0 px-3 font-bold text-[14px] text-foreground">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
               <SelectItem value="All Topics">All topics</SelectItem>
               <SelectItem value="Deliveries">Deliveries</SelectItem>
               <SelectItem value="Account">Account</SelectItem>
@@ -166,7 +166,7 @@ export const SupportPage = () => {
         {supportCards.map((card) => (
           <div
             key={card.id}
-            className="bg-card border border-border/60 rounded-[1.5rem] p-6 flex flex-col items-center text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer group"
+            className="bg-card border border-border/60 rounded-[1.5rem] p-6 flex flex-col items-center text-center shadow-sm transition-all duration-300 cursor-pointer group"
           >
             <div
               className={`w-13 h-13 rounded-2xl flex items-center justify-center mb-5 group-hover:scale-110 transition-transform ${card.iconBg}`}
@@ -202,7 +202,7 @@ export const SupportPage = () => {
             {popularTopics.map((topic) => (
               <div
                 key={topic.id}
-                className="p-5 sm:p-6 flex items-center justify-between cursor-pointer transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md hover:bg-secondary/30 group"
+                className="p-5 sm:p-6 flex items-center justify-between cursor-pointer transition-all duration-200 hover:bg-secondary/30 group"
               >
                 <div className="flex items-center gap-5">
                   <div className="w-10 h-10 rounded-xl bg-secondary flex items-center justify-center border border-border/50 shrink-0 group-hover:bg-secondary/80 transition-colors">
@@ -228,7 +228,7 @@ export const SupportPage = () => {
         {/* Right Column: Contact info & Feedback */}
         <div className="lg:col-span-4 flex flex-col gap-6">
           {/* Still need help */}
-          <div className="bg-card border border-border/60 rounded-[1.5rem] p-6 sm:p-7 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1">
+          <div className="bg-card border border-border/60 rounded-[1.5rem] p-6 sm:p-7 shadow-sm transition-all duration-300">
             <h3 className="font-bold text-[16px] text-foreground mb-1.5">
               Still need help?
             </h3>
@@ -270,7 +270,7 @@ export const SupportPage = () => {
           </div>
 
           {/* Give Feedback */}
-          <div className="bg-card border border-border/60 rounded-[1.5rem] p-6 sm:p-7 shadow-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-1 flex flex-col h-full justify-between">
+          <div className="bg-card border border-border/60 rounded-[1.5rem] p-6 sm:p-7 shadow-sm transition-all duration-300 flex flex-col h-full justify-between">
             <div>
               <h3 className="font-bold text-[16px] text-foreground mb-1.5">
                 Give Feedback

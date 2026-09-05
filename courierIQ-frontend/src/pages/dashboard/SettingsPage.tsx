@@ -31,7 +31,7 @@ const SectionCard = ({
   iconBg = "bg-blue-50",
   iconColor = "text-blue-600",
 }: SettingsSectionProps) => (
-  <div className="bg-card border border-border/60 rounded-[2rem] p-8 flex flex-col gap-8 shadow-sm relative w-full transition-all duration-300 hover:shadow-lg hover:border-border hover:-translate-y-1">
+  <div className="bg-card border border-border/60 rounded-[2rem] p-8 flex flex-col gap-8 shadow-sm relative w-full transition-all duration-300">
     <div className="flex items-start gap-4">
       <div
         className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 ${iconBg}`}
@@ -282,7 +282,7 @@ export const SettingsPage = () => {
                       placeholder={`Select ${pref.label.toLowerCase()}`}
                     />
                   </SelectTrigger>
-                  <SelectContent>
+                  <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
                     {pref.options?.map((opt) => (
                       <SelectItem key={opt.value} value={opt.value}>
                         {opt.label}

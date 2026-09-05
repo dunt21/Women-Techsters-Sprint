@@ -173,7 +173,7 @@ export const ComparePage = () => {
                 </div>
               </div>
 
-              <Button className="text-[13px] font-bold text-primary flex items-center gap-1.5 hover:underline w-fit mt-1">
+              <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
                 <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
                   <LuPlus className="w-3.5 h-3.5" />
                 </div>
@@ -197,7 +197,7 @@ export const ComparePage = () => {
                         <SelectTrigger className="border-none bg-transparent h-full shadow-none hover:bg-transparent focus:ring-0 px-2 font-bold text-[13px] text-foreground w-full">
                           <SelectValue />
                         </SelectTrigger>
-                        <SelectContent>
+                        <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
                           {field.options.map((opt) => (
                             <SelectItem key={opt} value={opt}>
                               {opt}
@@ -211,7 +211,7 @@ export const ComparePage = () => {
               ))}
             </div>
 
-            <Button className="w-full h-12 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] hover:-translate-y-1 hover:shadow-lg text-white shadow-md active:scale-95 transition-all text-[14px]">
+            <Button className="w-full h-12 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] hover:shadow-md text-white shadow-sm active:scale-95 transition-all duration-300 text-[14px]">
               Compare Options <LuChevronRight className="w-4 h-4 ml-1" />
             </Button>
           </div>
@@ -288,7 +288,7 @@ export const ComparePage = () => {
                 <SelectTrigger className="w-full sm:w-50 h-10 border-border bg-card rounded-xl text-[13px] font-bold shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent>
+                <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
                   <SelectItem value="Price (Low to High)">
                     Price (Low to High)
                   </SelectItem>
