@@ -25,13 +25,6 @@ export const User = sequelize.define("User", {
     allowNull: false,
   },
 
-  createdAt: {
-    type: DataTypes.DATE,
-  },
-
-  updatedAt: {
-    type: DataTypes.DATE,
-  },
 
   status: {
     type: DataTypes.ENUM("active", "pending", "blocked"),
