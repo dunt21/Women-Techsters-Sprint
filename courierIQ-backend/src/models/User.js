@@ -12,19 +12,33 @@ export const User = sequelize.define("User", {
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: {
+        args: [3, 100],
+        msg: "Please provide a valid full name.",
+      },
+    },
   },
 
   email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
+    validate: {
+      isEmail: true,
+    },
   },
 
   password: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      len: {
+        args: [8, 100],
+        msg: "Your password must be at least 8 characters long!",
+      },
+    },
   },
-
 
   status: {
     type: DataTypes.ENUM("active", "pending", "blocked"),
