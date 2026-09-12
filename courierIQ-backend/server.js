@@ -1,12 +1,7 @@
-import express from "express";
 import { connectDb } from "./src/config/database.js";
 import { sequelize } from "./src/models/index.js";
 
-const app = express();
-
-app.get("/", (req, res) => {
-  res.send("We activeeee");
-});
+import app from "./src/app.js";
 
 app.listen(5000, async () => {
   console.log("We liveeeee");
