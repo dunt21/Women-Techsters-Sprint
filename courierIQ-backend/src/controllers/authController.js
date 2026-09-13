@@ -1,6 +1,4 @@
-import { User } from "../models/index.js";
-import bcrypt from "bcryptjs";
-import { generateToken } from "../config/jwt.js";
+import { loginService, registerService } from "../services/authService.js";
 
 export const registerUser = async (req, res) => {
   try {
@@ -9,15 +7,8 @@ export const registerUser = async (req, res) => {
     if (!name || !email || !password)
       return res.status(400).json({ message: "Please provide all fields" });
 
-    const userExists = await User.findOne({ where: { email: email } });
-    if (userExists)
-      return res.status(400).json({ message: "User already exists" });
+    const newUser = await registerService(name, email, password);
 
-    const newUser = await User.create({
-      name: name,
-      email: email,
-      password: password,
-    });
     return res
       .status(201)
       .json({ message: "Registration successful!", user: newUser });
@@ -26,6 +17,9 @@ export const registerUser = async (req, res) => {
 
     if (err.name === "SequelizeValidationError")
       return res.status(400).json({ message: err.errors[0].message });
+
+    if (err.message === "User already exists")
+      return res.status(400).json({ message: err.message });
 
     res.status(500).json({ message: "Server Error" });
   }
@@ -38,25 +32,17 @@ export const loginUser = async (req, res) => {
     if (!email || !password)
       return res.status(400).json({ message: "Please provide all fields" });
 
-    const userExists = await User.findOne({ where: { email: email } });
-    if (!userExists)
-      return res.status(401).json({ message: "Invalid email or password" });
+    const { userExists, token } = await loginService(email, password);
 
-    const isPasswordCorrect = await bcrypt.compare(
-      password,
-      userExists.password,
-    );
-
-    if (!isPasswordCorrect)
-      return res.status(401).json({ message: "Invalid email or password" });
-
-    const token = generateToken(userExists.id);
     return res.status(200).json({
       message: "Succesful login",
       user: { name: userExists.name, email: email, id: userExists.id },
       token: token,
     });
   } catch (error) {
+    if (err.message === "Invalid email or password")
+      return res.status(400).json({ message: err.message });
+
     res.status(500).json({ message: "Server Error" });
   }
 };

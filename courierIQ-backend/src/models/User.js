@@ -25,7 +25,9 @@ export const User = sequelize.define("User", {
     allowNull: false,
     unique: true,
     validate: {
-      isEmail: true,
+      isEmail: {
+        msg: "Your email format is incorrect",
+      },
     },
   },
 
