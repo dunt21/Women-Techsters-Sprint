@@ -1,9 +1,10 @@
 import express from "express";
-import { comparison } from "../controllers/comparisonController.js";
+import { comparison, getHistory } from "../controllers/comparisonController.js";
 import { authenticateUser } from "../middleware/auth.js";
 
 const router = express.Router();
 
-router.post("/comparison", authenticateUser, comparison);
+router.post("/compare", authenticateUser, comparison);
+router.get("/history", authenticateUser, getHistory);
 
 export default router;
