@@ -1,48 +1,30 @@
+import { registerSchema } from "../schema/authValidator.js";
 import { loginService, registerService } from "../services/authService.js";
 
 export const registerUser = async (req, res) => {
-  try {
-    const { name, email, password } = req.body;
+  const { name, email, password } = req.body;
 
-    if (!name || !email || !password)
-      return res.status(400).json({ message: "Please provide all fields" });
+  const { error } = registerSchema.validate(req.body);
+  if (error) return res.status(400).json({ msg: error.details[0].message });
 
-    const newUser = await registerService(name, email, password);
+  const newUser = await registerService(name, email, password);
 
-    return res
-      .status(201)
-      .json({ message: "Registration successful!", user: newUser });
-  } catch (err) {
-    console.error(err);
-
-    if (err.name === "SequelizeValidationError")
-      return res.status(400).json({ message: err.errors[0].message });
-
-    if (err.message === "User already exists")
-      return res.status(400).json({ message: err.message });
-
-    res.status(500).json({ message: "Server Error" });
-  }
+  return res
+    .status(201)
+    .json({ message: "Registration successful!", user: newUser });
 };
 
 export const loginUser = async (req, res) => {
-  try {
-    const { email, password } = req.body;
+  const { email, password } = req.body;
 
-    if (!email || !password)
-      return res.status(400).json({ message: "Please provide all fields" });
+  if (!email || !password)
+    return res.status(400).json({ message: "Please provide all fields" });
 
-    const { userExists, token } = await loginService(email, password);
+  const { userExists, token } = await loginService(email, password);
 
-    return res.status(200).json({
-      message: "Succesful login",
-      user: { name: userExists.name, email: email, id: userExists.id },
-      token: token,
-    });
-  } catch (error) {
-    if (err.message === "Invalid email or password")
-      return res.status(400).json({ message: err.message });
-
-    res.status(500).json({ message: "Server Error" });
-  }
+  return res.status(200).json({
+    message: "Succesful login",
+    user: { name: userExists.name, email: email, id: userExists.id },
+    token: token,
+  });
 };
