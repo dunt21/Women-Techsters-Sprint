@@ -1,4 +1,4 @@
-import { registerSchema } from "../schema/authValidator.js";
+import { loginSchema, registerSchema } from "../schema/authValidator.js";
 import { loginService, registerService } from "../services/authService.js";
 
 export const registerUser = async (req, res) => {
@@ -17,8 +17,8 @@ export const registerUser = async (req, res) => {
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password)
-    return res.status(400).json({ message: "Please provide all fields" });
+  const { error } = loginSchema.validate(req.body);
+  if (error) return res.status(500).json({ msg: error.details[0].message });
 
   const { userExists, token } = await loginService(email, password);
 

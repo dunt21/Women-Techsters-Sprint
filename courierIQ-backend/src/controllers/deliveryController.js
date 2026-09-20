@@ -1,3 +1,4 @@
+import { deliverySchema } from "../schema/deliverySchema.js";
 import {
   bookDelivery,
   getAllPastDeliveries,
@@ -9,10 +10,8 @@ export async function deliveryController(req, res) {
   data.userId = userId;
   data.trackingUrl = "https://track.courieriq.com/12345";
 
-  console.log(data);
-
-  if (!data.pickup || !data.dropoff || !data.courier)
-    return res.status(400).json({ msg: "Please select a delivery option" });
+  const { error } = deliverySchema.validate(req.body);
+  if (error) return res.status(400).json({ msg: error.details[0].message });
 
   const result = await bookDelivery(data);
 

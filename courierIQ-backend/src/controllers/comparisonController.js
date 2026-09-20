@@ -1,3 +1,4 @@
+import { CompareSchema } from "../schema/compareValidator.js";
 import {
   createComparison,
   getAllComparisons,
@@ -7,11 +8,8 @@ export const comparison = async (req, res) => {
   const { pickup, dropOff } = req.body;
   const userId = req.user.id;
 
-  if (!pickup)
-    return res.status(400).json({ msg: "Please provide  pickup locations" });
-
-  if (!dropOff)
-    return res.status(400).json({ msg: "Please provide  dropOff locations" });
+  const { error } = CompareSchema.validate(req.body);
+  if (error) return res.status(400).json({ msg: error.details[0].message });
 
   const result = await createComparison(pickup, dropOff, userId);
 

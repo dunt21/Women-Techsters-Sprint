@@ -22,7 +22,7 @@ export const SignupPage = () => {
   const { loading, isSuccess, data, simulateSignUp } = useFetch();
   const { login } = useAuth();
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setErrors({ name: "", email: "", password: "" });
@@ -55,7 +55,31 @@ export const SignupPage = () => {
     }
 
     // If everything passes, simulate the signup!
-    simulateSignUp(userInput);
+    // simulateSignUp(userInput);
+
+  
+
+    try {
+      const registerUser = await fetch('http://localhost:5000/api/auth/register', {
+      method: 'POST',
+      body: JSON.stringify(userInput),
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    const response = await registerUser.json()
+    console.log(response)
+    toast.success("Account Created Successfully 🥂");
+
+    if(!response) 
+    {  toast.error("Account Creation Failed");}
+
+ 
+    } catch (error) {
+      console.error(error)
+      toast.error("Account Creation Failed");
+    }
   };
 
   useEffect(() => {
