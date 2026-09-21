@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+import { useAuth } from "@/context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 // Helper component that listens to URL hash changes and scrolls to the element with matching id
 const ScrollToHash = () => {
@@ -20,6 +22,16 @@ const ScrollToHash = () => {
 };
 
 export const PublicLayout = () => {
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user) {
+      console.log("called");
+      navigate("/dashboard");
+    }
+  }, [user, navigate]);
+
   return (
     <div className="min-h-screen flex flex-col justify-between">
       <ScrollToHash />

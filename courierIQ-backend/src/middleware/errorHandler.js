@@ -4,6 +4,11 @@ export function errorHandler(err, req, res, next) {
   if (err.name === "SequelizeValidationError")
     return res.status(400).json({ message: err.errors[0].message });
 
+  if (err.name === "SequelizeUniqueConstraintError")
+    return res
+      .status(400)
+      .json({ message: "That email is already registered!" });
+
   if (err.message === "User already exists")
     return res.status(400).json({ message: err.message });
 
@@ -11,6 +16,7 @@ export function errorHandler(err, req, res, next) {
     return res.status(400).json({ message: err.message });
 
   res.status(500).json({ msg: err.message || "Server Error" });
+  res.status(500).json({ message: err.message || "Server Error" });
 
   next();
 }

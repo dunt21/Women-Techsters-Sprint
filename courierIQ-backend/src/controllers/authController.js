@@ -1,24 +1,20 @@
-import { loginSchema, registerSchema } from "../schema/authValidator.js";
+// import { token } from "morgan";
 import { loginService, registerService } from "../services/authService.js";
 
 export const registerUser = async (req, res) => {
   const { name, email, password } = req.body;
 
-  const { error } = registerSchema.validate(req.body);
-  if (error) return res.status(400).json({ msg: error.details[0].message });
+  const { newUser, userToken } = await registerService(name, email, password);
 
-  const newUser = await registerService(name, email, password);
-
-  return res
-    .status(201)
-    .json({ message: "Registration successful!", user: newUser });
+  return res.status(201).json({
+    message: "Registration successful!",
+    user: newUser,
+    token: userToken,
+  });
 };
 
 export const loginUser = async (req, res) => {
   const { email, password } = req.body;
-
-  const { error } = loginSchema.validate(req.body);
-  if (error) return res.status(500).json({ msg: error.details[0].message });
 
   const { userExists, token } = await loginService(email, password);
 

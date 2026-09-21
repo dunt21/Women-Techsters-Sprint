@@ -34,12 +34,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       localStorage.setItem("rememberMe", "true");
 
       localStorage.setItem("user", JSON.stringify(userData));
-      localStorage.setItem("tokens", JSON.stringify(tokens));
+      localStorage.setItem("tokens", tokens)
     }
     if (rememberMe === false) {
       sessionStorage.setItem("rememberMe", "true");
       sessionStorage.setItem("user", JSON.stringify(userData));
-      sessionStorage.setItem("tokens", JSON.stringify(tokens));
+      sessionStorage.setItem("tokens", tokens)
     }
   }
 

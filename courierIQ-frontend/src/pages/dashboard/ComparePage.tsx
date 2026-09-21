@@ -1,16 +1,8 @@
-// import { useState } from "react";
 import {
   LuMapPin,
   LuPlus,
-  LuPackage,
-  LuTruck,
   LuClock,
-  LuTag,
-  LuCalendar,
-  LuCheck,
-  LuStar,
   LuChevronDown,
-  // LuBookmark,
   LuChevronRight,
   LuInfo,
 } from "react-icons/lu";
@@ -23,77 +15,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-// import { Link } from "react-router-dom";
-
-const selectFields = [
-  {
-    id: "packageType",
-    label: "Package type",
-    icon: LuPackage,
-    defaultValue: "Parcel",
-    options: ["Parcel", "Document", "Large Box", "Pallet"],
-  },
-  {
-    id: "preferredCourier",
-    label: "Preferred courier",
-    icon: LuTruck,
-    defaultValue: "No preference",
-    options: [
-      "No preference",
-      "Yango Delivery",
-      "Uber Direct",
-      "Bolt Delivery",
-    ],
-  },
-];
-
-const courierOptions = [
-  {
-    id: 1,
-    name: "Yango Delivery",
-    logoLetter: "Y",
-    logoBg: "bg-secondary text-foreground",
-    rating: "4.6",
-    // deliveries: "1,245 deliveries",
-    isBestPrice: true,
-    estimatedTime: "~4h 50m",
-    speedTier: "Standard",
-    price: "GHS 47",
-    dropOffDate: "Tomorrow",
-    dropOffTime: "Before 6:00 PM",
-    features: ["Door-to-door", "Live tracking", "SMS updates"],
-  },
-  {
-    id: 2,
-    name: "Uber Direct",
-    logoLetter: "Uber",
-    logoBg: "bg-foreground text-background font-serif text-[12px]",
-    rating: "4.4",
-    // deliveries: "2,013 deliveries",
-    isBestPrice: false,
-    estimatedTime: "~4h 30m",
-    speedTier: "Express",
-    price: "GHS 50",
-    dropOffDate: "Tomorrow",
-    dropOffTime: "Before 5:00 PM",
-    features: ["Door-to-door", "Live tracking", "Priority support"],
-  },
-  {
-    id: 3,
-    name: "Bolt Delivery",
-    logoLetter: "bolt",
-    logoBg: "bg-primary text-primary-foreground font-black text-[12px]",
-    rating: "4.2",
-    // deliveries: "985 deliveries",
-    isBestPrice: false,
-    estimatedTime: "~5h 10m",
-    speedTier: "Standard",
-    price: "GHS 52",
-    dropOffDate: "Tomorrow",
-    dropOffTime: "Before 7:00 PM",
-    features: ["Door-to-door", "Live tracking"],
-  },
-];
+import { useState } from "react";
+import { CourierCard } from "@/components/dashboard/CourierCard";
+import { api } from "@/api/axios";
+import toast from "react-hot-toast";
 
 const routeStats = [
   { label: "Estimated distance", value: "250 km" },
@@ -102,6 +27,61 @@ const routeStats = [
 ];
 
 export const ComparePage = () => {
+  const [userInput, setUserInput] = useState({
+    pickup: "",
+    dropOff: "",
+  });
+  const [quotes, setQuotes] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
+
+  const handleCompare = async () => {
+    if (userInput.pickup.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        pickup: "Pickup point cannot be empty!",
+      }));
+
+      return;
+    }
+
+    if (userInput.dropOff.trim().length <= 2) {
+      setErrors((prev) => ({
+        ...prev,
+        dropOff: "DropOff point cannot be empty!",
+      }));
+
+      return;
+    }
+
+    try {
+      setLoading(true);
+
+      const token = localStorage.getItem("tokens");
+      console.log(token);
+
+      const response = await api.post("/api/comparison/compare", userInput, {
+        headers: {
+          authorization: `Bearer ${token}`,
+        },
+      });
+      const data = response.data;
+
+      console.log(data);
+
+      setQuotes(data.quotes);
+
+      toast.success(`${data.message} 👏`);
+    } catch (error) {
+      const backendErr = error.response.data.message;
+      console.log(backendErr);
+
+      toast.error(backendErr ? backendErr : "Unable to search prices");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-6 max-w-300 mx-auto animate-fade-in-up pb-12 h-full">
       {/* Header */}
@@ -146,7 +126,12 @@ export const ComparePage = () => {
                   </div>
                   <Input
                     type="text"
-                    defaultValue="Accra, Greater Accra"
+                    value={userInput.pickup}
+                    error={errors.pickup}
+                    placeholder="Please enter a pickup point"
+                    onChange={(e) =>
+                      setUserInput({ ...userInput, pickup: e.target.value })
+                    }
                     className="flex-1 bg-transparent border-none outline-none px-3 text-[14px] font-bold text-foreground"
                   />
                   <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -166,7 +151,12 @@ export const ComparePage = () => {
                   </div>
                   <Input
                     type="text"
-                    defaultValue="Kumasi, Ashanti Region"
+                    value={userInput.dropOff}
+                    error={errors.dropOff}
+                    placeholder="Please enter a dropOff point"
+                    onChange={(e) =>
+                      setUserInput({ ...userInput, dropOff: e.target.value })
+                    }
                     className="flex-1 bg-transparent border-none outline-none px-3 text-[14px] font-bold text-foreground"
                   />
                   <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0" />
@@ -183,36 +173,18 @@ export const ComparePage = () => {
 
             <div className="h-px w-full bg-border/60 my-6"></div>
 
-            {/* Mapped Select Fields (Package Details / Preferences) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-8">
-              {selectFields.map((field) => (
-                <div key={field.id} className="flex flex-col gap-1.5">
-                  <label className="text-[13px] font-bold text-muted-foreground">
-                    {field.label}
-                  </label>
-                  <div className="relative flex items-center bg-background border border-border rounded-xl h-12 px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 transition-all">
-                    <field.icon className="w-4 h-4 text-muted-foreground shrink-0 ml-1" />
-                    <div className="flex-1 min-w-0">
-                      <Select defaultValue={field.defaultValue}>
-                        <SelectTrigger className="border-none bg-transparent h-full shadow-none hover:bg-transparent focus:ring-0 px-2 font-bold text-[13px] text-foreground w-full">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
-                          {field.options.map((opt) => (
-                            <SelectItem key={opt} value={opt}>
-                              {opt}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <Button className="w-full h-12 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] hover:shadow-md text-white shadow-sm active:scale-95 transition-all duration-300 text-[14px]">
-              Compare Options <LuChevronRight className="w-4 h-4 ml-1" />
+            <Button
+              className="w-full h-12 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] hover:shadow-md text-white shadow-sm active:scale-95 transition-all duration-300 text-[14px]"
+              onClick={handleCompare}
+              disabled={loading}
+            >
+              {loading ? (
+                "Comparing"
+              ) : (
+                <>
+                  Compare Options <LuChevronRight className="w-4 h-4 ml-1" />
+                </>
+              )}
             </Button>
           </div>
 
@@ -276,8 +248,7 @@ export const ComparePage = () => {
                 Available Options
               </h3>
               <p className="text-[13px] font-medium text-muted-foreground mt-1">
-                We found {courierOptions.length} courier services for your
-                delivery.
+                We found {quotes.length} courier services for your delivery.
               </p>
             </div>
             <div className="flex flex-col gap-1.5 shrink-0 w-full sm:w-auto">
@@ -288,7 +259,10 @@ export const ComparePage = () => {
                 <SelectTrigger className="w-full sm:w-50 h-10 border-border bg-card rounded-xl text-[13px] font-bold shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
+                <SelectContent
+                  alignItemWithTrigger={false}
+                  className="w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width)"
+                >
                   <SelectItem value="Price (Low to High)">
                     Price (Low to High)
                   </SelectItem>
@@ -302,112 +276,24 @@ export const ComparePage = () => {
           </div>
 
           <div className="flex flex-col gap-4">
-            {courierOptions.map((courier) => (
-              <div
-                key={courier.id}
-                className="bg-card border border-border/60 rounded-[1.5rem] p-5 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer"
-              >
-                {/* Card Header */}
-                <div className="flex items-start justify-between mb-6">
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-13 h-13 rounded-xl flex items-center justify-center text-[22px] font-black shrink-0 shadow-sm ${courier.logoBg}`}
-                    >
-                      {courier.logoLetter}
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <div className="flex items-center gap-2">
-                        <h4 className="font-bold text-[17px] text-foreground">
-                          {courier.name}
-                        </h4>
-                        {courier.isBestPrice && (
-                          <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wide">
-                            Best Price
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground mt-0.5">
-                        <LuStar className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
-                        <span className="font-bold text-foreground">
-                          {courier.rating}
-                        </span>
-                        <span>•</span>
-                        {/* <span>{courier.deliveries}</span> */}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col items-end gap-2 shrink-0">
-                    <Button className="h-10 px-6 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] text-white shadow-sm hover:shadow-md transition-all text-[13px]">
-                      Select
-                    </Button>
-                    <button className="text-[12px] font-bold text-primary flex items-center gap-1 hover:opacity-70 transition-opacity">
-                      View details <LuChevronDown className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
+            {quotes.length > 0 ? (
+              quotes.map((courier) => (
+                <CourierCard key={courier.id} courier={courier} />
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-border/60 rounded-[1.5rem] bg-secondary/20 w-full mt-2">
+                <div className="w-16 h-16 bg-background border border-border/50 rounded-full flex items-center justify-center mb-4 shadow-sm">
+                  <LuMapPin className="w-7 h-7 text-muted-foreground/60" />
                 </div>
-
-                {/* Details Row */}
-                <div className="grid grid-cols-3 gap-4 mb-6">
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[12px] font-bold text-muted-foreground flex items-center gap-1.5">
-                      <LuClock className="w-3.5 h-3.5" /> Estimated time
-                    </span>
-                    <span className="font-bold text-[15px] text-foreground">
-                      {courier.estimatedTime}
-                    </span>
-                    <span className="text-[11px] font-semibold text-muted-foreground">
-                      {courier.speedTier}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[12px] font-bold text-muted-foreground flex items-center gap-1.5">
-                      <LuTag className="w-3.5 h-3.5" /> Price
-                    </span>
-                    <span className="font-bold text-[15px] text-emerald-600">
-                      {courier.price}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-col gap-1.5">
-                    <span className="text-[12px] font-bold text-muted-foreground flex items-center gap-1.5">
-                      <LuCalendar className="w-3.5 h-3.5" /> Drop-off
-                    </span>
-                    <span className="font-bold text-[14px] text-foreground">
-                      {courier.dropOffDate}
-                    </span>
-                    <span className="text-[11px] font-semibold text-muted-foreground">
-                      {courier.dropOffTime}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="w-full h-px bg-border/50 mb-4"></div>
-
-                {/* Features Map */}
-                <div className="flex items-center gap-3 flex-wrap">
-                  <span className="text-[12px] font-bold text-foreground mr-1">
-                    Features:
-                  </span>
-                  {courier.features.map((feature, idx) => (
-                    <div key={idx} className="flex items-center gap-1.5">
-                      <div className="w-3.5 h-3.5 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <LuCheck className="w-2.5 h-2.5 text-emerald-600" />
-                      </div>
-                      <span className="text-[12px] font-medium text-foreground">
-                        {feature}
-                      </span>
-                      {idx !== courier.features.length - 1 && (
-                        <span className="text-muted-foreground mx-1 text-[10px]">
-                          •
-                        </span>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                <h3 className="text-[17px] font-bold text-foreground mb-2">
+                  No quotes yet
+                </h3>
+                <p className="text-[14px] font-medium text-muted-foreground max-w-70">
+                  Enter your pickup and drop-off locations above to start
+                  comparing delivery prices.
+                </p>
               </div>
-            ))}
+            )}
           </div>
 
           {/* Save Route Banner */}

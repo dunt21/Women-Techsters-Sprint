@@ -8,12 +8,11 @@ export const comparison = async (req, res) => {
   const { pickup, dropOff } = req.body;
   const userId = req.user.id;
 
-  const { error } = CompareSchema.validate(req.body);
-  if (error) return res.status(400).json({ msg: error.details[0].message });
-
   const result = await createComparison(pickup, dropOff, userId);
 
-  return res.status(201).json({ msg: `Here is your quotes: `, data: result });
+  return res
+    .status(201)
+    .json({ message: `Your quotes are ready! `, data: result });
 };
 
 export async function getHistory(req, res) {
@@ -21,5 +20,5 @@ export async function getHistory(req, res) {
 
   const results = await getAllComparisons(userId);
 
-  res.status(200).json({ msg: "Past comparison history", data: results });
+  res.status(200).json({ message: "Past comparison history", data: results });
 }

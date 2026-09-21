@@ -10,12 +10,12 @@ export async function deliveryController(req, res) {
   data.userId = userId;
   data.trackingUrl = "https://track.courieriq.com/12345";
 
-  const { error } = deliverySchema.validate(req.body);
-  if (error) return res.status(400).json({ msg: error.details[0].message });
-
   const result = await bookDelivery(data);
 
   res.status(201).json({ msg: "Delivery selected successfully", data: result });
+  res
+    .status(201)
+    .json({ message: "Delivery selected successfully", data: result });
 }
 
 export async function getHistory(req, res) {
@@ -25,5 +25,6 @@ export async function getHistory(req, res) {
 
   res
     .status(200)
-    .json({ msg: "Past selected deliveries history", data: results });
+
+    .json({ message: "Past selected deliveries history", data: results });
 }

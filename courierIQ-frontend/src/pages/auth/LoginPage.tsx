@@ -1,13 +1,15 @@
 import { Link, useNavigate } from "react-router-dom";
+
 // import { LuCheck } from "react-icons/lu";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { GoogleButton } from "@/components/auth/GoogleButton";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
-import { useFetch } from "@/hooks/useFetch";
+
 import toast from "react-hot-toast";
 import { RememberMeCheckbox } from "@/components/auth/RememberMeCheckbox";
 import { Button } from "@/components/ui/button";
+import { api } from "@/api/axios";
 
 export const LoginPage = () => {
   const [userInput, setUserInput] = useState({
@@ -16,12 +18,12 @@ export const LoginPage = () => {
   });
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { loading, isSuccess, data, simulateLogin } = useFetch();
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     setErrors({ email: "", password: "" });
@@ -35,7 +37,7 @@ export const LoginPage = () => {
       return;
     }
 
-    if (userInput.password.length !== 7) {
+    if (userInput.password.length <= 7) {
       setErrors({
         ...errors,
         password: "Password must be 8 characters long",
@@ -44,16 +46,29 @@ export const LoginPage = () => {
       return;
     }
 
-    simulateLogin(userInput);
-  };
+    try {
+      setLoading(true);
 
-  useEffect(() => {
-    if (isSuccess && data) {
-      login(data.user, data.tokens, rememberMe);
+      const response = await api.post("api/auth/login", userInput);
+
+      const data = response.data;
+
+      // console.log(data.token);
+      login(data.user, data.token, rememberMe);
+
       navigate("/dashboard");
-      toast.success("Login succesful");
+
+      toast.success(data.message);
+    } catch (error) {
+      console.log(error.response);
+
+      const backendErr = error.response.data.message;
+
+      toast.error(backendErr ? backendErr : "Account Creation Failed");
+    } finally {
+      setLoading(false);
     }
-  }, [isSuccess, data, login, navigate, rememberMe]);
+  };
 
   return (
     <div className="flex flex-col w-full animate-fade-in-up">

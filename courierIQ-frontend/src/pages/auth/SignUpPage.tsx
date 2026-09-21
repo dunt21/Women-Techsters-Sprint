@@ -3,11 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { AuthInput } from "@/components/auth/AuthInput";
 import { GoogleButton } from "@/components/auth/GoogleButton";
 import { RememberMeCheckbox } from "@/components/auth/RememberMeCheckbox";
-import { useEffect, useState } from "react";
-import { useFetch } from "@/hooks/useFetch";
+import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
+import { api } from "@/api/axios";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -18,21 +18,24 @@ export const SignupPage = () => {
   });
   const [errors, setErrors] = useState({ name: "", email: "", password: "" });
   const [rememberMe, setRememberMe] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const { loading, isSuccess, data, simulateSignUp } = useFetch();
   const { login } = useAuth();
 
-  const handleSubmit = async(e: React.SubmitEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    console.log("checking for errs");
 
     setErrors({ name: "", email: "", password: "" });
 
     // 1. NAME VALIDATION
-    if (userInput.name.trim().length < 2) {
+    if (userInput.name.trim().length <= 2) {
       setErrors((prev) => ({
         ...prev,
         name: "Name must be at least 2 characters long",
       }));
+
       return;
     }
 
@@ -54,41 +57,32 @@ export const SignupPage = () => {
       return;
     }
 
-    // If everything passes, simulate the signup!
-    // simulateSignUp(userInput);
-
-  
-
     try {
-      const registerUser = await fetch('http://localhost:5000/api/auth/register', {
-      method: 'POST',
-      body: JSON.stringify(userInput),
-      headers: {
-        'Content-Type': 'application/json',
+      setLoading(true);
+      console.log("fetching data");
+
+      const response = await api.post("api/auth/register", userInput);
+
+      const data = response.data;
+
+      toast.success(`${data.message} 🥂`);
+      login(data.user, data.token, rememberMe);
+      navigate("/dashboard");
+
+      if (!response) {
+        toast.error("Account Creation Failed");
       }
-    })
-
-    const response = await registerUser.json()
-    console.log(response)
-    toast.success("Account Created Successfully 🥂");
-
-    if(!response) 
-    {  toast.error("Account Creation Failed");}
-
- 
     } catch (error) {
-      console.error(error)
-      toast.error("Account Creation Failed");
+      console.log(error.response);
+
+      const backendErr = error.response.data.message;
+      console.log(backendErr);
+
+      toast.error(backendErr ? backendErr : "Account Creation Failed");
+    } finally {
+      setLoading(false);
     }
   };
-
-  useEffect(() => {
-    if (isSuccess && data) {
-      login(data, "", rememberMe);
-      navigate("/dashboard");
-      toast.success("Account Created Successfully 🥂");
-    }
-  }, [isSuccess, data, navigate, login, rememberMe]);
 
   return (
     <div className="flex flex-col w-full animate-fade-in-up">
@@ -99,7 +93,11 @@ export const SignupPage = () => {
         Start comparing courier options and make smarter delivery choices.
       </p>
 
-      <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit}>
+      <form
+        className="flex flex-col gap-4 w-full"
+        onSubmit={handleSubmit}
+        noValidate
+      >
         <AuthInput
           label="Name"
           type="text"
@@ -109,9 +107,12 @@ export const SignupPage = () => {
           placeholder="Enter your name"
           value={userInput.name}
           autoComplete="name"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setUserInput({ ...userInput, name: e.target.value })
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value.replace(/[0-9]/g, "");
+
+            setUserInput({ ...userInput, name: value });
+          }}
+          required
         />
 
         <AuthInput
@@ -123,9 +124,11 @@ export const SignupPage = () => {
           placeholder="Enter your email"
           value={userInput.email}
           autoComplete="email"
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setUserInput({ ...userInput, email: e.target.value })
-          }
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            const value = e.target.value;
+            setUserInput({ ...userInput, email: value });
+          }}
+          required
         />
 
         <AuthInput
@@ -141,6 +144,7 @@ export const SignupPage = () => {
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             setUserInput({ ...userInput, password: e.target.value })
           }
+          required
         />
 
         <div className="flex items-center justify-between mt-1">
