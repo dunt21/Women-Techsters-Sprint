@@ -1,23 +1,38 @@
-import { LuStar, LuChevronDown, LuClock, LuTag, LuCalendar, LuCheck } from "react-icons/lu";
+import {
+  LuStar,
+  LuChevronDown,
+  LuClock,
+  LuTag,
+  LuCalendar,
+} from "react-icons/lu";
 import { Button } from "@/components/ui/button";
+import { courierStyles } from "@/utils/courierStyles";
 
-export const CourierCard = ({ courier }: { courier: any }) => {
+export const CourierCard = ({
+  courier,
+  bestPrice,
+}: {
+  courier: any;
+  bestPrice: number;
+}) => {
+  const courierStyle = courierStyles[courier.courier];
+
   return (
     <div className="bg-card border border-border/60 rounded-[1.5rem] p-5 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
       {/* Card Header */}
       <div className="flex items-start justify-between mb-6">
         <div className="flex items-center gap-4">
           <div
-            className={`w-13 h-13 rounded-xl flex items-center justify-center text-[22px] font-black shrink-0 shadow-sm ${courier.logoBg}`}
+            className={`w-13 h-13 rounded-xl flex items-center justify-center text-[22px] font-black shrink-0 shadow-sm ${courierStyle.logoBg}`}
           >
-            {courier.logoLetter}
+            {courierStyle.logoLetter}
           </div>
           <div className="flex flex-col gap-0.5">
             <div className="flex items-center gap-2">
               <h4 className="font-bold text-[17px] text-foreground">
-                {courier.name}
+                {courier.courier}
               </h4>
-              {courier.isBestPrice && (
+              {courier.price === bestPrice && (
                 <span className="px-2 py-0.5 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[10px] font-bold uppercase tracking-wide">
                   Best Price
                 </span>
@@ -62,7 +77,7 @@ export const CourierCard = ({ courier }: { courier: any }) => {
             <LuTag className="w-3.5 h-3.5" /> Price
           </span>
           <span className="font-bold text-[15px] text-emerald-600">
-            {courier.price}
+            GHS {courier.price}
           </span>
         </div>
 
@@ -79,9 +94,9 @@ export const CourierCard = ({ courier }: { courier: any }) => {
         </div>
       </div>
 
-      <div className="w-full h-px bg-border/50 mb-4"></div>
+      {/* <div className="w-full h-px bg-border/50 mb-4"></div>
 
-      {/* Features Map */}
+      Features Map
       <div className="flex items-center gap-3 flex-wrap">
         <span className="text-[12px] font-bold text-foreground mr-1">
           Features:
@@ -95,13 +110,11 @@ export const CourierCard = ({ courier }: { courier: any }) => {
               {feature}
             </span>
             {idx !== courier.features.length - 1 && (
-              <span className="text-muted-foreground mx-1 text-[10px]">
-                •
-              </span>
+              <span className="text-muted-foreground mx-1 text-[10px]">•</span>
             )}
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

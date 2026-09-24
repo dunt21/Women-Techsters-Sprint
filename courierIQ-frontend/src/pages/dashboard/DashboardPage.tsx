@@ -1,7 +1,9 @@
 import { LuMapPin, LuPackage } from "react-icons/lu";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
-// import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { api } from "@/api/axios";
+import { formatHistoryData } from "@/utils/formatHistory";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
@@ -27,38 +29,32 @@ export const DashboardPage = () => {
     },
   ];
 
-  const recentComparisons = [
-    {
-      id: 1,
-      carrier: "DHL Express",
-      route: "Lagos ➔ London",
-      price: "$45.00",
-      status: "Cheapest",
-      statusClass: "text-emerald-500",
-      iconLetter: "D",
-      iconClass: "bg-slate-900 text-white",
-    },
-    {
-      id: 2,
-      carrier: "FedEx",
-      route: "New York ➔ Paris",
-      price: "$85.20",
-      status: "Fastest",
-      statusClass: "text-slate-400",
-      iconLetter: "F",
-      iconClass: "bg-slate-100 text-slate-900",
-    },
-    {
-      id: 3,
-      carrier: "UPS",
-      route: "Toronto ➔ Dubai",
-      price: "$112.50",
-      status: "Standard",
-      statusClass: "text-slate-400",
-      iconLetter: "U",
-      iconClass: "bg-blue-100 text-blue-700",
-    },
-  ];
+  const [recentComparisons, setRecentComparisons] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchDashboardHistory = async () => {
+      try {
+        const token = localStorage.getItem("tokens");
+        const response = await api.get("/api/comparison/history", {
+          headers: { authorization: `Bearer ${token}` },
+        });
+
+        const rawHistory = response.data.data;
+        
+        // Use our reusable utility to format the data
+        const formatted = formatHistoryData(rawHistory);
+        
+        // We only want the 3 most recent searches for the dashboard!
+        const top3 = formatted.slice(0, 3);
+
+        setRecentComparisons(top3);
+      } catch (error) {
+        console.error("Failed to fetch dashboard history:", error);
+      }
+    };
+
+    fetchDashboardHistory();
+  }, []);
 
   return (
     <div className="w-full flex flex-col gap-10 max-w-300 mx-auto animate-fade-in-up">

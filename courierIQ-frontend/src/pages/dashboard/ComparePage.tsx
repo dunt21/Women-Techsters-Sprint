@@ -34,6 +34,7 @@ export const ComparePage = () => {
   const [quotes, setQuotes] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
+  const [bestPrice, setBestPrice] = useState(0);
 
   const handleCompare = async () => {
     if (userInput.pickup.trim() === "") {
@@ -58,7 +59,6 @@ export const ComparePage = () => {
       setLoading(true);
 
       const token = localStorage.getItem("tokens");
-      console.log(token);
 
       const response = await api.post("/api/comparison/compare", userInput, {
         headers: {
@@ -67,14 +67,16 @@ export const ComparePage = () => {
       });
       const data = response.data;
 
-      console.log(data);
+      const returnedQuotes = data.data.quotes;
 
-      setQuotes(data.quotes);
+      const minPrice = Math.min(...returnedQuotes.map((quote) => quote.price));
+      setBestPrice(minPrice);
+
+      setQuotes(returnedQuotes);
 
       toast.success(`${data.message} 👏`);
-    } catch (error) {
-      const backendErr = error.response.data.message;
-      console.log(backendErr);
+    } catch (error: any) {
+      const backendErr = error?.response?.data?.message;
 
       toast.error(backendErr ? backendErr : "Unable to search prices");
     } finally {
@@ -278,7 +280,11 @@ export const ComparePage = () => {
           <div className="flex flex-col gap-4">
             {quotes.length > 0 ? (
               quotes.map((courier) => (
-                <CourierCard key={courier.id} courier={courier} />
+                <CourierCard
+                  key={courier.id}
+                  courier={courier}
+                  bestPrice={bestPrice}
+                />
               ))
             ) : (
               <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-border/60 rounded-[1.5rem] bg-secondary/20 w-full mt-2">
