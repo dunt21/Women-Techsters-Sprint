@@ -10,6 +10,7 @@ import toast from "react-hot-toast";
 import { RememberMeCheckbox } from "@/components/auth/RememberMeCheckbox";
 import { Button } from "@/components/ui/button";
 import { api } from "@/api/axios";
+import axios from "axios";
 
 export const LoginPage = () => {
   const [userInput, setUserInput] = useState({
@@ -60,11 +61,13 @@ export const LoginPage = () => {
 
       toast.success(data.message);
     } catch (error) {
-      console.log(error.response);
+      if (axios.isAxiosError(error)) {
+        console.log(error.response);
 
-      const backendErr = error.response.data.message;
+        const backendErr = error.response?.data?.message;
 
-      toast.error(backendErr ? backendErr : "Account Creation Failed");
+        toast.error(backendErr);
+      } else toast.error("Account Couldn't Login");
     } finally {
       setLoading(false);
     }

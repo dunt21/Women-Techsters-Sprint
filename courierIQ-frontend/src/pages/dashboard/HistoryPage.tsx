@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import {
   LuSearch,
   LuChevronRight,
-  LuChevronLeft,
+  // LuChevronLeft,
   LuMapPin,
   LuArrowRight,
   LuRefreshCcw,
@@ -20,6 +20,7 @@ import { api } from "@/api/axios";
 import { Pagination } from "@/components/ui/pagination";
 import { courierStyles } from "@/utils/courierStyles";
 import { formatHistoryData } from "@/utils/formatHistory";
+// import { useLocation } from "react-router-dom";
 
 const courierOptions = [
   { value: "all", label: "All Couriers" },
@@ -35,10 +36,12 @@ const timeOptions = [
 
 export const HistoryPage = () => {
   const [search, setSearch] = useState("");
-  const [pastComparisons, setpastComparisons] = useState([]);
+  const [pastComparisons, setpastComparisons] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedHistory, setSelectedHistory] = useState<any>(null);
   const itemsPerPage = 5;
+
+  // const location = useLocation();
 
   useEffect(() => {
     const fetchHistory = async () => {

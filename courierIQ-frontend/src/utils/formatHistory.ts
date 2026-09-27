@@ -30,13 +30,12 @@ export const formatHistoryData = (rawHistory: any[]) => {
       bestPrice: minPrice !== Infinity ? `GH₵${minPrice}` : "N/A",
       
       // DashboardPage Specific Fields
-      carrier: searchItem.CourierQuotes[0]?.courier || "Courier",
-      route: `${searchItem.pickupLocation} ➔ ${searchItem.destination}`,
+      title: `${searchItem.CourierQuotes.length} Couriers Compared`,
+      subtitle: `${searchItem.pickupLocation} ➔ ${searchItem.destination}`,
       price: minPrice !== Infinity ? `GH₵${minPrice}` : "N/A",
-      status: "Completed",
-      statusClass: "text-emerald-500",
-      iconLetter: searchItem.CourierQuotes[0]?.courier?.charAt(0) || "C",
-      iconClass: "bg-slate-900 text-white",
+      status: "Best Price",
+      statusClass: "text-blue-500 bg-blue-50 px-2 py-0.5 rounded-md", // Added background for highlight
+      iconClass: "bg-blue-50 text-blue-600",
     };
   });
 };

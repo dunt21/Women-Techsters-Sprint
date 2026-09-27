@@ -31,7 +31,7 @@ export const ComparePage = () => {
     pickup: "",
     dropOff: "",
   });
-  const [quotes, setQuotes] = useState([]);
+  const [quotes, setQuotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
   const [bestPrice, setBestPrice] = useState(0);
@@ -69,7 +69,9 @@ export const ComparePage = () => {
 
       const returnedQuotes = data.data.quotes;
 
-      const minPrice = Math.min(...returnedQuotes.map((quote) => quote.price));
+      const minPrice = Math.min(
+        ...returnedQuotes.map((quote: { price: number }) => quote.price),
+      );
       setBestPrice(minPrice);
 
       setQuotes(returnedQuotes);

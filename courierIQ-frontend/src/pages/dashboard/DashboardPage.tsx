@@ -1,5 +1,5 @@
-import { LuMapPin, LuPackage } from "react-icons/lu";
-import { Link } from "react-router-dom";
+import { LuMapPin, LuPackage, LuSearch } from "react-icons/lu";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { api } from "@/api/axios";
@@ -7,6 +7,7 @@ import { formatHistoryData } from "@/utils/formatHistory";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   const summaryCards = [
     {
@@ -40,10 +41,10 @@ export const DashboardPage = () => {
         });
 
         const rawHistory = response.data.data;
-        
+
         // Use our reusable utility to format the data
         const formatted = formatHistoryData(rawHistory);
-        
+
         // We only want the 3 most recent searches for the dashboard!
         const top3 = formatted.slice(0, 3);
 
@@ -151,29 +152,39 @@ export const DashboardPage = () => {
             <h3 className="text-[1.1rem] font-bold text-slate-900">
               Recent Comparisons
             </h3>
-            <button className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors">
+            <Link
+              to="/history"
+              className="text-sm font-semibold text-slate-500 hover:text-slate-900 transition-colors"
+            >
               See all
-            </button>
+            </Link>
           </div>
 
           <div className="flex flex-col gap-3">
             {recentComparisons.map((item) => (
               <div
                 key={item.id}
+                onClick={() =>
+                  navigate("/history", {
+                    state: {
+                      preSelectedId: item.id,
+                    },
+                  })
+                }
                 className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-sm hover:border-slate-200 transition-all cursor-pointer group"
               >
                 <div className="flex items-center gap-5">
                   <div
-                    className={`w-12 h-12 rounded-2xl flex items-center justify-center font-bold text-lg group-hover:scale-105 transition-transform ${item.iconClass}`}
+                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${item.iconClass}`}
                   >
-                    {item.iconLetter}
+                    <LuSearch className="w-6 h-6" />
                   </div>
                   <div>
                     <p className="font-bold text-slate-900 text-[15px]">
-                      {item.carrier}
+                      {item.title}
                     </p>
                     <p className="text-[13px] font-medium text-slate-500 mt-0.5">
-                      {item.route}
+                      {item.subtitle}
                     </p>
                   </div>
                 </div>

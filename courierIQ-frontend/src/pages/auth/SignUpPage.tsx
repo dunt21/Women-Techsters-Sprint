@@ -8,6 +8,7 @@ import { useAuth } from "@/context/AuthContext";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
 import { api } from "@/api/axios";
+import axios from "axios";
 
 export const SignupPage = () => {
   const navigate = useNavigate();
@@ -73,12 +74,13 @@ export const SignupPage = () => {
         toast.error("Account Creation Failed");
       }
     } catch (error) {
-      console.log(error.response);
+      if (axios.isAxiosError(error)) {
+        console.log(error.response);
 
-      const backendErr = error.response.data.message;
-      console.log(backendErr);
+        const backendErr = error.response?.data?.message;
 
-      toast.error(backendErr ? backendErr : "Account Creation Failed");
+        toast.error(backendErr);
+      } else toast.error("Account Creation Failed");
     } finally {
       setLoading(false);
     }

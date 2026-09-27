@@ -8,6 +8,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { courierStyles } from "@/utils/courierStyles";
 
+// interface courierType {}
+
 export const CourierCard = ({
   courier,
   bestPrice,
@@ -15,7 +17,8 @@ export const CourierCard = ({
   courier: any;
   bestPrice: number;
 }) => {
-  const courierStyle = courierStyles[courier.courier];
+  const courierStyle =
+    courierStyles[courier.courier as keyof typeof courierStyles];
 
   return (
     <div className="bg-card border border-border/60 rounded-[1.5rem] p-5 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
