@@ -17,8 +17,9 @@ export const comparison = async (req, res) => {
 
 export async function getHistory(req, res) {
   const userId = req.user.id;
+  const limit = req.query.limit;
 
-  const results = await getAllComparisons(userId);
+  const results = await getAllComparisons(userId, limit);
 
   res.status(200).json({ message: "Past comparison history", data: results });
 }

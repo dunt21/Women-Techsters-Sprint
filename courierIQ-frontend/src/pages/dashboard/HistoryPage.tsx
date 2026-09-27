@@ -20,6 +20,8 @@ import { api } from "@/api/axios";
 import { Pagination } from "@/components/ui/pagination";
 import { courierStyles } from "@/utils/courierStyles";
 import { formatHistoryData } from "@/utils/formatHistory";
+import { HistoryListSkeleton } from "@/components/skeletons/HistoryListSkeleton";
+import { HistoryDetailsSkeleton } from "@/components/skeletons/HistoryDetailsSkeleton";
 // import { useLocation } from "react-router-dom";
 
 const courierOptions = [
@@ -39,6 +41,7 @@ export const HistoryPage = () => {
   const [pastComparisons, setpastComparisons] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedHistory, setSelectedHistory] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 5;
 
   // const location = useLocation();
@@ -46,6 +49,8 @@ export const HistoryPage = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
+        setIsLoading(true);
+
         const userString = localStorage.getItem("user");
         if (userString) {
           const userObj = JSON.parse(userString);
@@ -76,6 +81,8 @@ export const HistoryPage = () => {
         setpastComparisons(formattedHistory);
       } catch (error) {
         console.error("Failed to fetch history:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -152,7 +159,9 @@ export const HistoryPage = () => {
         {/* Left Column: History List */}
         <div className="xl:col-span-6 flex flex-col gap-0 border border-border bg-card rounded-2xl overflow-hidden shadow-sm">
           <div className="flex flex-col divide-y divide-border/60">
-            {currentItems.length > 0 ? (
+            {isLoading ? (
+              <HistoryListSkeleton />
+            ) : currentItems.length > 0 ? (
               currentItems.map((item: any) => (
                 <div
                   key={item.id}
@@ -213,7 +222,9 @@ export const HistoryPage = () => {
 
         {/* Right Column: Detailed View */}
         <div className="xl:col-span-6 flex flex-col gap-6 bg-card border border-border rounded-2xl p-6 shadow-sm">
-          {selectedHistory ? (
+          {isLoading ? (
+            <HistoryDetailsSkeleton />
+          ) : selectedHistory ? (
             <>
               {/* Header */}
               <div className="flex items-center justify-between mb-2">

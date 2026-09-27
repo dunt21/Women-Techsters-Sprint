@@ -54,11 +54,18 @@ export const createComparison = async (pickupLoc, dropOffLoc, id) => {
   return { search: newSearch, quotes: savedQuotes };
 };
 
-export async function getAllComparisons(userId) {
-  const results = await SearchHistory.findAll({
+export async function getAllComparisons(userId, limit = null) {
+  const query = {
     where: { userId: userId },
     include: [CourierQuote],
-  });
+    order: [['createdAt', 'DESC']],
+  };
+
+  if (limit) {
+    query.limit = parseInt(limit, 10);
+  }
+
+  const results = await SearchHistory.findAll(query);
 
   return results;
 }

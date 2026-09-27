@@ -4,10 +4,12 @@ import { useAuth } from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { api } from "@/api/axios";
 import { formatHistoryData } from "@/utils/formatHistory";
+import { ComparisonCardSkeleton } from "@/components/skeletons/ComparisonCardSkeleton";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [loading, isLoading] = useState(true);
 
   const summaryCards = [
     {
@@ -35,8 +37,10 @@ export const DashboardPage = () => {
   useEffect(() => {
     const fetchDashboardHistory = async () => {
       try {
+        isLoading(true);
+
         const token = localStorage.getItem("tokens");
-        const response = await api.get("/api/comparison/history", {
+        const response = await api.get("/api/comparison/history?limit=3", {
           headers: { authorization: `Bearer ${token}` },
         });
 
@@ -51,6 +55,8 @@ export const DashboardPage = () => {
         setRecentComparisons(top3);
       } catch (error) {
         console.error("Failed to fetch dashboard history:", error);
+      } finally {
+        isLoading(false);
       }
     };
 
@@ -161,45 +167,47 @@ export const DashboardPage = () => {
           </div>
 
           <div className="flex flex-col gap-3">
-            {recentComparisons.map((item) => (
-              <div
-                key={item.id}
-                onClick={() =>
-                  navigate("/history", {
-                    state: {
-                      preSelectedId: item.id,
-                    },
-                  })
-                }
-                className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-sm hover:border-slate-200 transition-all cursor-pointer group"
-              >
-                <div className="flex items-center gap-5">
+            {isLoading
+              ? [0, 1, 2].map((i: number) => <ComparisonCardSkeleton />)
+              : recentComparisons.map((item) => (
                   <div
-                    className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${item.iconClass}`}
+                    key={item.id}
+                    onClick={() =>
+                      navigate("/history", {
+                        state: {
+                          preSelectedId: item.id,
+                        },
+                      })
+                    }
+                    className="flex items-center justify-between p-4 px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-sm hover:border-slate-200 transition-all cursor-pointer group"
                   >
-                    <LuSearch className="w-6 h-6" />
+                    <div className="flex items-center gap-5">
+                      <div
+                        className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${item.iconClass}`}
+                      >
+                        <LuSearch className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <p className="font-bold text-slate-900 text-[15px]">
+                          {item.title}
+                        </p>
+                        <p className="text-[13px] font-medium text-slate-500 mt-0.5">
+                          {item.subtitle}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-bold text-slate-900 text-[15px]">
+                        {item.price}
+                      </p>
+                      <p
+                        className={`text-[13px] font-semibold mt-0.5 ${item.statusClass}`}
+                      >
+                        {item.status}
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="font-bold text-slate-900 text-[15px]">
-                      {item.title}
-                    </p>
-                    <p className="text-[13px] font-medium text-slate-500 mt-0.5">
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="font-bold text-slate-900 text-[15px]">
-                    {item.price}
-                  </p>
-                  <p
-                    className={`text-[13px] font-semibold mt-0.5 ${item.statusClass}`}
-                  >
-                    {item.status}
-                  </p>
-                </div>
-              </div>
-            ))}
+                ))}
           </div>
         </div>
 

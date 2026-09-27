@@ -19,7 +19,7 @@ export function authenticateUser(req, res, next) {
 
     next();
   } catch (error) {
-    // console.log(error);
+    console.log(error);
 
     if (error.name === "TokenExpiredError")
       return res
