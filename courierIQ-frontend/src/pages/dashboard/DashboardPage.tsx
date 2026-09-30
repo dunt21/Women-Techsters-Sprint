@@ -9,7 +9,7 @@ import { ComparisonCardSkeleton } from "@/components/skeletons/ComparisonCardSke
 export const DashboardPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [loading, isLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const summaryCards = [
     {
@@ -37,7 +37,7 @@ export const DashboardPage = () => {
   useEffect(() => {
     const fetchDashboardHistory = async () => {
       try {
-        isLoading(true);
+        setLoading(true);
 
         const token = localStorage.getItem("tokens");
         const response = await api.get("/api/comparison/history?limit=3", {
@@ -56,7 +56,7 @@ export const DashboardPage = () => {
       } catch (error) {
         console.error("Failed to fetch dashboard history:", error);
       } finally {
-        isLoading(false);
+        setLoading(false);
       }
     };
 
@@ -167,8 +167,8 @@ export const DashboardPage = () => {
           </div>
 
           <div className="flex flex-col gap-3">
-            {isLoading
-              ? [0, 1, 2].map((i: number) => <ComparisonCardSkeleton />)
+            {loading
+              ? [0, 1, 2].map((i: number) => <ComparisonCardSkeleton key={i} />)
               : recentComparisons.map((item) => (
                   <div
                     key={item.id}

@@ -7,7 +7,7 @@ import {
   LuInfo,
 } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+// import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
@@ -19,6 +19,9 @@ import { useState } from "react";
 import { CourierCard } from "@/components/dashboard/CourierCard";
 import { api } from "@/api/axios";
 import toast from "react-hot-toast";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
+import { SearchBox } from "@mapbox/search-js-react";
 
 const routeStats = [
   { label: "Estimated distance", value: "250 km" },
@@ -27,14 +30,20 @@ const routeStats = [
 ];
 
 export const ComparePage = () => {
+  const location = useLocation();
+
   const [userInput, setUserInput] = useState({
-    pickup: "",
-    dropOff: "",
+    pickup: location.state?.pickup || "",
+    dropOff: location.state?.dropoff || "",
   });
   const [quotes, setQuotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
   const [bestPrice, setBestPrice] = useState(0);
+
+  const mapboxApi = import.meta.env.VITE_MAPBOX_TOKEN;
+
+  console.log(errors);
 
   const handleCompare = async () => {
     if (userInput.pickup.trim() === "") {
@@ -86,6 +95,42 @@ export const ComparePage = () => {
     }
   };
 
+  const getCurLocation = () => {
+    // console.log("hi");
+    // console.log(mapboxApi);
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude;
+          const long = position.coords.longitude;
+
+          // console.log(`lat: ${lat} n long: ${long}`);
+
+          const response = await axios.get(
+            `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=${mapboxApi}`,
+          );
+
+          const userCurLoc = response.data.features[0].place_name;
+
+          setUserInput((input) => ({
+            ...input,
+            pickup: userCurLoc,
+          }));
+        },
+        (error) => {
+          console.error("Browser blocked us:", error.message);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 10000,
+        },
+      );
+    } else {
+      console.error("Your browser does not support Geolocation!");
+    }
+  };
+
   return (
     <div className="w-full flex flex-col gap-6 max-w-300 mx-auto animate-fade-in-up pb-12 h-full">
       {/* Header */}
@@ -128,7 +173,7 @@ export const ComparePage = () => {
                   <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 ml-1">
                     <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
                   </div>
-                  <Input
+                  {/* <Input
                     type="text"
                     value={userInput.pickup}
                     error={errors.pickup}
@@ -137,10 +182,57 @@ export const ComparePage = () => {
                       setUserInput({ ...userInput, pickup: e.target.value })
                     }
                     className="flex-1 bg-transparent border-none outline-none px-3 text-[14px] font-bold text-foreground"
-                  />
+                  /> */}
+
+                  <div className="flex-1 w-full">
+                    <SearchBox
+                      accessToken={mapboxApi}
+                      options={{
+                        language: "en",
+                        country: "GH",
+                        // types: "poi,address,place,neighborhood",
+                      }}
+                      value={userInput.pickup}
+                      onChange={(search) =>
+                        setUserInput({ ...userInput, pickup: search })
+                      }
+                      placeholder="Please enter a pickup point"
+                      onRetrieve={(result) => {
+                        console.log(result);
+                      }}
+                      theme={{
+                        variables: {
+                          boxShadow: "none",
+                          border: "none",
+                          fontFamily: "inherit",
+                          unit: "14px",
+                        },
+                        cssText: `
+                               input {
+                                     background-color: transparent !important;
+                                    font-weight: bold !important; 
+                                     width: 100% !important;
+      }
+
+         input:focus {
+        outline: none !important;
+           box-shadow: none !important;
+      }
+         .SearchIcon, svg.SearchIcon {
+        display: none !important;
+      }
+    `,
+                      }}
+                    />
+                  </div>
+
                   <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0" />
                 </div>
-                <button className="text-[12px] font-bold text-primary flex items-center gap-1.5 mt-1 hover:underline w-fit">
+                <button
+                  type="button"
+                  className="text-[12px] font-bold text-primary flex items-center gap-1.5 mt-1 hover:underline w-fit"
+                  onClick={() => getCurLocation()}
+                >
                   Use my current location <LuMapPin className="w-3.5 h-3.5" />
                 </button>
               </div>
@@ -153,16 +245,49 @@ export const ComparePage = () => {
                   <div className="w-4 h-4 rounded-full bg-destructive/10 flex items-center justify-center shrink-0 ml-1">
                     <div className="w-2 h-2 rounded-full bg-destructive"></div>
                   </div>
-                  <Input
-                    type="text"
-                    value={userInput.dropOff}
-                    error={errors.dropOff}
-                    placeholder="Please enter a dropOff point"
-                    onChange={(e) =>
-                      setUserInput({ ...userInput, dropOff: e.target.value })
-                    }
-                    className="flex-1 bg-transparent border-none outline-none px-3 text-[14px] font-bold text-foreground"
-                  />
+                  <div className="flex-1 w-full">
+                    <SearchBox
+                      accessToken={mapboxApi}
+                      options={{
+                        language: "en",
+                        country: "GH",
+                        // types: "poi,address,place,neighborhood",
+                      }}
+                      value={userInput.dropOff}
+                      onChange={(search) =>
+                        setUserInput({ ...userInput, dropOff: search })
+                      }
+                      placeholder="Please enter a pickup point"
+                      onRetrieve={(result) => {
+                        console.log(result);
+                      }}
+                      theme={{
+                        variables: {
+                          boxShadow: "none",
+                          border: "none",
+                          fontFamily: "inherit",
+                          unit: "14px",
+                        },
+                        cssText: `
+                               input {
+                                     background-color: transparent !important;
+                                    font-weight: bold !important; 
+                                     width: 100% !important;
+                                     padding-left: 10px !important
+      }
+
+         input:focus {
+        outline: none !important;
+           box-shadow: none !important;
+      }
+         .SearchIcon, svg.SearchIcon {
+        display: none !important;
+      }
+    `,
+                      }}
+                    />
+                  </div>
+
                   <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0" />
                 </div>
               </div>

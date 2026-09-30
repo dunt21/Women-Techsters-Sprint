@@ -22,7 +22,7 @@ import { courierStyles } from "@/utils/courierStyles";
 import { formatHistoryData } from "@/utils/formatHistory";
 import { HistoryListSkeleton } from "@/components/skeletons/HistoryListSkeleton";
 import { HistoryDetailsSkeleton } from "@/components/skeletons/HistoryDetailsSkeleton";
-// import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const courierOptions = [
   { value: "all", label: "All Couriers" },
@@ -44,7 +44,8 @@ export const HistoryPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const itemsPerPage = 5;
 
-  // const location = useLocation();
+  const location = useLocation();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHistory = async () => {
@@ -74,7 +75,15 @@ export const HistoryPage = () => {
 
         setpastComparisons(formattedHistory);
         if (formattedHistory.length > 0) {
-          setSelectedHistory(formattedHistory[0]);
+          const selectedItemId = location.state?.preSelectedId;
+
+          const clickedItem = formattedHistory.find(
+            (i) => i.id === selectedItemId,
+          );
+
+          setSelectedHistory(clickedItem);
+
+          if (!clickedItem) setSelectedHistory(formattedHistory[0]);
         }
 
         console.log("Formatted History:", formattedHistory);
@@ -87,13 +96,22 @@ export const HistoryPage = () => {
     };
 
     fetchHistory();
-  }, []);
+  }, [location.state?.preSelectedId]);
 
   const totalPages = Math.ceil(pastComparisons.length / itemsPerPage);
   const currentItems = pastComparisons.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage,
   );
+
+  const compareAgain = (pickup: string, dropoff: string) => {
+    navigate("/compare", {
+      state: {
+        pickup: pickup,
+        dropoff: dropoff,
+      },
+    });
+  };
 
   return (
     <div className="w-full flex flex-col gap-6 max-w-350 mx-auto animate-fade-in-up pb-12 h-full">
@@ -377,6 +395,9 @@ export const HistoryPage = () => {
           <Button
             variant="outline"
             className="w-full h-14 mt-4 rounded-xl font-bold border-border/80 text-foreground bg-background hover:bg-secondary transition-colors text-[15px]"
+            onClick={() =>
+              compareAgain(selectedHistory.origin, selectedHistory.dest)
+            }
           >
             <LuRefreshCcw className="w-4 h-4 mr-2" /> Compare Again
           </Button>

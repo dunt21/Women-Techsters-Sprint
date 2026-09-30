@@ -5,6 +5,7 @@ import { AuthProvider } from "@/context/AuthContext";
 import App from "@/App.tsx";
 import { BrowserRouter } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import "mapbox-gl/dist/mapbox-gl.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
