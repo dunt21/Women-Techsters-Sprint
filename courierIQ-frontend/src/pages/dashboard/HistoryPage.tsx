@@ -23,6 +23,7 @@ import { formatHistoryData } from "@/utils/formatHistory";
 import { HistoryListSkeleton } from "@/components/skeletons/HistoryListSkeleton";
 import { HistoryDetailsSkeleton } from "@/components/skeletons/HistoryDetailsSkeleton";
 import { useLocation, useNavigate } from "react-router-dom";
+import { RouteMap } from "@/components/shared/RouteMap";
 
 const courierOptions = [
   { value: "all", label: "All Couriers" },
@@ -289,13 +290,11 @@ export const HistoryPage = () => {
               </div>
 
               {/* Map Placeholder */}
-              <div
-                className="w-full h-70 bg-secondary rounded-2xl border border-border mt-2 overflow-hidden relative shadow-inner bg-cover bg-center"
-                style={{
-                  backgroundImage: `url('/realistic_map_bg_1788223664365.jpg')`,
-                }}
-              >
-                <div className="absolute inset-0 bg-blue-900/5 mix-blend-multiply"></div>
+              <div className="w-full h-70 bg-secondary rounded-2xl border border-border mt-2 overflow-hidden relative shadow-inner">
+                <div className="absolute inset-0 z-0">
+                  <RouteMap />
+                </div>
+                <div className="absolute inset-0 bg-blue-900/5 mix-blend-multiply pointer-events-none"></div>
               </div>
 
               {/* Comparison Results */}
@@ -321,9 +320,9 @@ export const HistoryPage = () => {
                     return (
                       <div
                         key={courier.id}
-                        className="flex items-center gap-3 py-3 px-4 sm:px-5 cursor-pointer transition-colors hover:bg-slate-50 bg-card"
+                        className="flex items-center gap-3 py-3 px-4 sm:px-5 cursor-pointer transition-colors hover:bg-slate-50 bg-card justify-between"
                       >
-                        <div className="flex items-center gap-3 sm:gap-4 w-40 sm:w-32 shrink-0">
+                        <div className="flex items-center gap-3 sm:gap-4 w-40 sm:w-48 shrink-0">
                           <div
                             className={`w-11 h-11 rounded-xl flex items-center justify-center font-black ${style.logoBg}`}
                           >
@@ -365,14 +364,14 @@ export const HistoryPage = () => {
                           )}
                         </div>
 
-                        <div className="shrink-0 ml-2">
+                        {/* <div className="shrink-0 ml-2">
                           <Button
                             variant="outline"
                             className="h-9 px-5 rounded-lg font-bold text-sm w-20 bg-card text-foreground hover:bg-[#3b41c5] hover:text-white hover:border-[#3b41c5] transition-colors"
                           >
                             Select
                           </Button>
-                        </div>
+                        </div> */}
                       </div>
                     );
                   })}

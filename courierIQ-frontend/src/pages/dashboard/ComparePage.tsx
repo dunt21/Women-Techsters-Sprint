@@ -1,6 +1,5 @@
 import {
   LuMapPin,
-  LuPlus,
   LuClock,
   LuChevronDown,
   LuChevronRight,
@@ -22,6 +21,7 @@ import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
 import { SearchBox } from "@mapbox/search-js-react";
+import { RouteMap } from "@/components/shared/RouteMap";
 
 const routeStats = [
   { label: "Estimated distance", value: "250 km" },
@@ -40,6 +40,15 @@ export const ComparePage = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
   const [bestPrice, setBestPrice] = useState(0);
+  const [showRoute, setShowRoute] = useState(false);
+  const [pickupCoords, setPickupCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [dropoffCoords, setDropoffCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const mapboxApi = import.meta.env.VITE_MAPBOX_TOKEN;
 
@@ -66,6 +75,7 @@ export const ComparePage = () => {
 
     try {
       setLoading(true);
+      setShowRoute(false);
 
       const token = localStorage.getItem("tokens");
 
@@ -84,6 +94,7 @@ export const ComparePage = () => {
       setBestPrice(minPrice);
 
       setQuotes(returnedQuotes);
+      setShowRoute(true);
 
       toast.success(`${data.message} 👏`);
     } catch (error: any) {
@@ -96,22 +107,17 @@ export const ComparePage = () => {
   };
 
   const getCurLocation = () => {
-    // console.log("hi");
-    // console.log(mapboxApi);
-
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const lat = position.coords.latitude;
           const long = position.coords.longitude;
 
-          // console.log(`lat: ${lat} n long: ${long}`);
-
           const response = await axios.get(
             `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=${mapboxApi}`,
           );
 
-          const userCurLoc = response.data.features[0].place_name;
+          const userCurLoc = response.data.features[0].text;
 
           setUserInput((input) => ({
             ...input,
@@ -128,6 +134,16 @@ export const ComparePage = () => {
       );
     } else {
       console.error("Your browser does not support Geolocation!");
+    }
+  };
+
+  const handleBookingRedirect = (courier: string) => {
+    if (courier === "Uber")
+      window.open("https://m.uber.com/go/connect/home?effect=", "_blank");
+    else if (courier === "Yango")
+      window.open("https://yango.com/en_int/order/?from=order_GH", "_blank");
+    else {
+      toast.success(`Redirecting you to ${courier}...`);
     }
   };
 
@@ -198,7 +214,12 @@ export const ComparePage = () => {
                       }
                       placeholder="Please enter a pickup point"
                       onRetrieve={(result) => {
-                        console.log(result);
+                        const rawCoords =
+                          result.features[0].geometry.coordinates;
+                        setPickupCoords({
+                          longitude: rawCoords[0],
+                          latitude: rawCoords[1],
+                        });
                       }}
                       theme={{
                         variables: {
@@ -259,7 +280,12 @@ export const ComparePage = () => {
                       }
                       placeholder="Please enter a pickup point"
                       onRetrieve={(result) => {
-                        console.log(result);
+                        const rawCoords =
+                          result.features[0].geometry.coordinates;
+                        setDropoffCoords({
+                          longitude: rawCoords[0],
+                          latitude: rawCoords[1],
+                        });
                       }}
                       theme={{
                         variables: {
@@ -292,12 +318,12 @@ export const ComparePage = () => {
                 </div>
               </div>
 
-              <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
+              {/* <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
                 <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
                   <LuPlus className="w-3.5 h-3.5" />
                 </div>
                 Add stop
-              </Button>
+              </Button> */}
             </div>
 
             <div className="h-px w-full bg-border/60 my-6"></div>
@@ -320,30 +346,11 @@ export const ComparePage = () => {
           {/* Map & Stats */}
           <div className="bg-card border border-border/60 rounded-[1.5rem] overflow-hidden shadow-sm flex flex-col">
             <div className="w-full h-55 bg-secondary relative">
-              <img
-                src="/realistic_map_bg_1788223664365.jpg"
-                alt="Route Map"
-                className="w-full h-full object-cover"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src =
-                    "https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&w=2074&auto=format&fit=crop";
-                }}
+              <RouteMap
+                pickupCoords={showRoute ? pickupCoords : null}
+                dropoffCoords={showRoute ? dropoffCoords : null}
               />
               <div className="absolute inset-0 bg-background/10"></div>
-              {/* Fake UI Overlay on Map */}
-              <div className="absolute top-4 right-4 flex flex-col gap-2">
-                <div className="bg-background rounded-lg shadow-md border border-border flex flex-col overflow-hidden">
-                  <button className="w-9 h-9 flex items-center justify-center hover:bg-secondary border-b border-border transition-colors">
-                    <LuPlus className="w-4 h-4 text-foreground" />
-                  </button>
-                  <button className="w-9 h-9 flex items-center justify-center hover:bg-secondary transition-colors">
-                    <div className="w-3 h-1 bg-foreground rounded-full"></div>
-                  </button>
-                </div>
-                <button className="w-9 h-9 bg-background rounded-lg shadow-md border border-border flex items-center justify-center hover:bg-secondary transition-colors">
-                  <LuMapPin className="w-4 h-4 text-foreground" />
-                </button>
-              </div>
             </div>
 
             <div className="p-5 sm:p-6 bg-card flex flex-col">
@@ -411,6 +418,7 @@ export const ComparePage = () => {
                   key={courier.id}
                   courier={courier}
                   bestPrice={bestPrice}
+                  handler={handleBookingRedirect}
                 />
               ))
             ) : (

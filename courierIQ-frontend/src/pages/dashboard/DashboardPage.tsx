@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { api } from "@/api/axios";
 import { formatHistoryData } from "@/utils/formatHistory";
 import { ComparisonCardSkeleton } from "@/components/skeletons/ComparisonCardSkeleton";
+import { RouteMap } from "@/components/shared/RouteMap";
 
 export const DashboardPage = () => {
   const { user } = useAuth();
@@ -78,12 +79,12 @@ export const DashboardPage = () => {
       {/* Top Grid: Shipping Overview + Small Metric Cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Big Card - Realistic Map & Recent Delivery */}
-        <div
-          className="col-span-1 lg:col-span-2 rounded-[2rem] border border-slate-200 relative overflow-hidden flex flex-col justify-end p-6 min-h-75 shadow-inner bg-cover bg-center"
-          style={{ backgroundImage: `url('/assets/map_bg.jpg')` }}
-        >
+        <div className="col-span-1 lg:col-span-2 rounded-[2rem] border border-slate-200 relative overflow-hidden flex flex-col justify-end p-6 min-h-75 shadow-inner bg-cover bg-center">
+          <div className="absolute inset-0 z-0">
+            <RouteMap />
+          </div>
           {/* Dark Overlay to make text readable if map is bright */}
-          <div className="absolute inset-0 bg-black/10 z-0"></div>
+          <div className="absolute inset-0 bg-black/10 z-0 pointer-events-none"></div>
 
           {/* Floating Card for Recent Delivery Choice */}
           <div className="relative z-10 bg-white/95 backdrop-blur-md p-5 rounded-2xl border border-white/60 shadow-xl max-w-sm">

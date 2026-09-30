@@ -13,9 +13,13 @@ import { courierStyles } from "@/utils/courierStyles";
 export const CourierCard = ({
   courier,
   bestPrice,
+  handler,
+  isHistoryView,
 }: {
   courier: any;
   bestPrice: number;
+  handler?: (courierName: string) => void;
+  isHistoryView?: boolean;
 }) => {
   const courierStyle =
     courierStyles[courier.courier as keyof typeof courierStyles];
@@ -51,14 +55,19 @@ export const CourierCard = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-end gap-2 shrink-0">
-          <Button className="h-10 px-6 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] text-white shadow-sm hover:shadow-md transition-all text-[13px]">
-            Select
-          </Button>
-          <button className="text-[12px] font-bold text-primary flex items-center gap-1 hover:opacity-70 transition-opacity">
-            View details <LuChevronDown className="w-3.5 h-3.5" />
-          </button>
-        </div>
+        {!isHistoryView && (
+          <div className="flex flex-col items-end gap-2 shrink-0">
+            <Button
+              className="h-10 px-6 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] text-white shadow-sm hover:shadow-md transition-all text-[13px]"
+              onClick={() => handler?.(courier.courier)}
+            >
+              Select
+            </Button>
+            <button className="text-[12px] font-bold text-primary flex items-center gap-1 hover:opacity-70 transition-opacity">
+              View details <LuChevronDown className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Details Row */}
