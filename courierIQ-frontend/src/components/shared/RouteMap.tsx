@@ -5,11 +5,10 @@ import Map, {
   Source,
   Layer,
   type MapRef,
-} from "react-map-gl/mapbox";
-import "mapbox-gl/dist/mapbox-gl.css";
+} from "react-map-gl/maplibre";
+import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState, useRef } from "react";
-
-const MAPBOX_TOKEN = import.meta.env.VITE_MAPBOX_TOKEN;
+import maplibregl from "maplibre-gl";
 
 interface RouteMapProps {
   pickupCoords?: { latitude: number; longitude: number } | null;
@@ -80,9 +79,9 @@ export const RouteMap = ({ pickupCoords, dropoffCoords }: RouteMapProps) => {
     <div className="w-full h-full rounded-2xl overflow-hidden shadow-inner border border-border">
       <Map
         ref={mapRef}
+        mapLib={maplibregl}
         {...viewState}
-        mapStyle="mapbox://styles/mapbox/streets-v12"
-        mapboxAccessToken={MAPBOX_TOKEN}
+        mapStyle="https://tiles.openfreemap.org/styles/liberty"
         onMove={(event) => setViewState(event.viewState)}
       >
         {pickupCoords && (
@@ -117,7 +116,7 @@ export const RouteMap = ({ pickupCoords, dropoffCoords }: RouteMapProps) => {
         <GeolocateControl
           position="top-right"
           trackUserLocation={true}
-          showUserHeading={true}
+          // showUserHeading={true}
         />
         <NavigationControl position="top-right" />
       </Map>

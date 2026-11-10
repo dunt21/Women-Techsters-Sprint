@@ -1,5 +1,6 @@
 import {
   LuMapPin,
+  LuPlus,
   LuClock,
   LuChevronDown,
   LuChevronRight,
@@ -20,7 +21,7 @@ import { api } from "@/api/axios";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { SearchBox } from "@mapbox/search-js-react";
+import { LocationInput } from "@/components/shared/LocationInput";
 import { RouteMap } from "@/components/shared/RouteMap";
 
 const routeStats = [
@@ -40,17 +41,10 @@ export const ComparePage = () => {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
   const [bestPrice, setBestPrice] = useState(0);
-  const [showRoute, setShowRoute] = useState(false);
-  const [pickupCoords, setPickupCoords] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
-  const [dropoffCoords, setDropoffCoords] = useState<{
-    latitude: number;
-    longitude: number;
-  } | null>(null);
+  const [pickupCoords, setPickupCoords] = useState<any>(null);
+  const [dropoffCoords, setDropoffCoords] = useState<any>(null);
 
-  const mapboxApi = import.meta.env.VITE_MAPBOX_TOKEN;
+  const locationIqKey = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 
   console.log(errors);
 
@@ -75,7 +69,6 @@ export const ComparePage = () => {
 
     try {
       setLoading(true);
-      setShowRoute(false);
 
       const token = localStorage.getItem("tokens");
 
@@ -94,7 +87,6 @@ export const ComparePage = () => {
       setBestPrice(minPrice);
 
       setQuotes(returnedQuotes);
-      setShowRoute(true);
 
       toast.success(`${data.message} 👏`);
     } catch (error: any) {
@@ -113,16 +105,27 @@ export const ComparePage = () => {
           const lat = position.coords.latitude;
           const long = position.coords.longitude;
 
-          const response = await axios.get(
-            `https://api.mapbox.com/geocoding/v5/mapbox.places/${long},${lat}.json?access_token=${mapboxApi}`,
-          );
+          setPickupCoords({ latitude: lat, longitude: long });
 
-          const userCurLoc = response.data.features[0].text;
+          try {
+            if (
+              locationIqKey &&
+              !locationIqKey.includes("your_locationiq_token")
+            ) {
+              const response = await axios.get(
+                `https://us1.locationiq.com/v1/reverse?key=${locationIqKey}&lat=${lat}&lon=${long}&format=json`,
+              );
 
-          setUserInput((input) => ({
-            ...input,
-            pickup: userCurLoc,
-          }));
+              const userCurLoc = response.data.display_name;
+
+              setUserInput((input) => ({
+                ...input,
+                pickup: userCurLoc,
+              }));
+            }
+          } catch (err) {
+            console.error("Reverse geocoding failed:", err);
+          }
         },
         (error) => {
           console.error("Browser blocked us:", error.message);
@@ -137,32 +140,22 @@ export const ComparePage = () => {
     }
   };
 
-  const handleBookingRedirect = (courier: string) => {
-    if (courier === "Uber")
-      window.open("https://m.uber.com/go/connect/home?effect=", "_blank");
-    else if (courier === "Yango")
-      window.open("https://yango.com/en_int/order/?from=order_GH", "_blank");
-    else {
-      toast.success(`Redirecting you to ${courier}...`);
-    }
-  };
-
   return (
-    <div className="w-full flex flex-col gap-6 max-w-300 mx-auto animate-fade-in-up pb-12 h-full">
+    <div className="w-full flex flex-col gap-6 max-w-7xl mx-auto animate-fade-in-up pb-12 h-full">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="flex flex-col">
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
             Compare Delivery
           </h1>
-          <p className="text-muted-foreground mt-1.5 font-medium text-[15px]">
+          <p className="text-muted-foreground mt-1 text-sm sm:text-[15px] font-medium">
             Enter your delivery details to compare prices, delivery times and
             choose the best option.
           </p>
         </div>
         <Button
           variant="outline"
-          className="h-10 px-4 rounded-xl font-bold border-border bg-background hover:bg-secondary text-foreground shadow-sm"
+          className="h-10 px-4 rounded-xl font-bold border-border bg-background hover:bg-secondary text-foreground shadow-sm w-full sm:w-auto shrink-0"
         >
           <LuClock className="w-4 h-4 mr-2" /> Recent Searches{" "}
           <LuChevronDown className="w-4 h-4 ml-1" />
@@ -170,11 +163,11 @@ export const ComparePage = () => {
       </div>
 
       {/* Main Grid Layout */}
-      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mt-4 mb-10">
+      <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mt-2 sm:mt-4 mb-10">
         {/* Left Column: Forms & Map */}
         <div className="xl:col-span-5 flex flex-col gap-6">
           {/* Delivery Details Card */}
-          <div className="bg-card border border-border/60 rounded-[1.5rem] p-6 sm:p-7 shadow-sm">
+          <div className="bg-card border border-border/60 rounded-[1.5rem] p-4 sm:p-6 lg:p-7 shadow-sm">
             <h3 className="font-bold text-[16px] text-foreground mb-6">
               Delivery Details
             </h3>
@@ -201,48 +194,17 @@ export const ComparePage = () => {
                   /> */}
 
                   <div className="flex-1 w-full">
-                    <SearchBox
-                      accessToken={mapboxApi}
-                      options={{
-                        language: "en",
-                        country: "GH",
-                        // types: "poi,address,place,neighborhood",
-                      }}
+                    <LocationInput
                       value={userInput.pickup}
                       onChange={(search) =>
                         setUserInput({ ...userInput, pickup: search })
                       }
                       placeholder="Please enter a pickup point"
-                      onRetrieve={(result) => {
-                        const rawCoords =
-                          result.features[0].geometry.coordinates;
+                      onSelectCoords={(coords) => {
                         setPickupCoords({
-                          longitude: rawCoords[0],
-                          latitude: rawCoords[1],
+                          longitude: coords.longitude,
+                          latitude: coords.latitude,
                         });
-                      }}
-                      theme={{
-                        variables: {
-                          boxShadow: "none",
-                          border: "none",
-                          fontFamily: "inherit",
-                          unit: "14px",
-                        },
-                        cssText: `
-                               input {
-                                     background-color: transparent !important;
-                                    font-weight: bold !important; 
-                                     width: 100% !important;
-      }
-
-         input:focus {
-        outline: none !important;
-           box-shadow: none !important;
-      }
-         .SearchIcon, svg.SearchIcon {
-        display: none !important;
-      }
-    `,
                       }}
                     />
                   </div>
@@ -267,49 +229,17 @@ export const ComparePage = () => {
                     <div className="w-2 h-2 rounded-full bg-destructive"></div>
                   </div>
                   <div className="flex-1 w-full">
-                    <SearchBox
-                      accessToken={mapboxApi}
-                      options={{
-                        language: "en",
-                        country: "GH",
-                        // types: "poi,address,place,neighborhood",
-                      }}
+                    <LocationInput
                       value={userInput.dropOff}
                       onChange={(search) =>
                         setUserInput({ ...userInput, dropOff: search })
                       }
-                      placeholder="Please enter a pickup point"
-                      onRetrieve={(result) => {
-                        const rawCoords =
-                          result.features[0].geometry.coordinates;
+                      placeholder="Please enter a drop-off point"
+                      onSelectCoords={(coords) => {
                         setDropoffCoords({
-                          longitude: rawCoords[0],
-                          latitude: rawCoords[1],
+                          longitude: coords.longitude,
+                          latitude: coords.latitude,
                         });
-                      }}
-                      theme={{
-                        variables: {
-                          boxShadow: "none",
-                          border: "none",
-                          fontFamily: "inherit",
-                          unit: "14px",
-                        },
-                        cssText: `
-                               input {
-                                     background-color: transparent !important;
-                                    font-weight: bold !important; 
-                                     width: 100% !important;
-                                     padding-left: 10px !important
-      }
-
-         input:focus {
-        outline: none !important;
-           box-shadow: none !important;
-      }
-         .SearchIcon, svg.SearchIcon {
-        display: none !important;
-      }
-    `,
                       }}
                     />
                   </div>
@@ -318,12 +248,12 @@ export const ComparePage = () => {
                 </div>
               </div>
 
-              {/* <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
+              <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
                 <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
                   <LuPlus className="w-3.5 h-3.5" />
                 </div>
                 Add stop
-              </Button> */}
+              </Button>
             </div>
 
             <div className="h-px w-full bg-border/60 my-6"></div>
@@ -345,31 +275,45 @@ export const ComparePage = () => {
 
           {/* Map & Stats */}
           <div className="bg-card border border-border/60 rounded-[1.5rem] overflow-hidden shadow-sm flex flex-col">
-            <div className="w-full h-55 bg-secondary relative">
+            <div className="w-full h-52 sm:h-60 bg-secondary relative">
               <RouteMap
-                pickupCoords={showRoute ? pickupCoords : null}
-                dropoffCoords={showRoute ? dropoffCoords : null}
+                pickupCoords={pickupCoords}
+                dropoffCoords={dropoffCoords}
               />
               <div className="absolute inset-0 bg-background/10"></div>
+              {/* Fake UI Overlay on Map */}
+              <div className="absolute top-4 right-4 flex flex-col gap-2">
+                <div className="bg-background rounded-lg shadow-md border border-border flex flex-col overflow-hidden">
+                  <button className="w-9 h-9 flex items-center justify-center hover:bg-secondary border-b border-border transition-colors">
+                    <LuPlus className="w-4 h-4 text-foreground" />
+                  </button>
+                  <button className="w-9 h-9 flex items-center justify-center hover:bg-secondary transition-colors">
+                    <div className="w-3 h-1 bg-foreground rounded-full"></div>
+                  </button>
+                </div>
+                <button className="w-9 h-9 bg-background rounded-lg shadow-md border border-border flex items-center justify-center hover:bg-secondary transition-colors">
+                  <LuMapPin className="w-4 h-4 text-foreground" />
+                </button>
+              </div>
             </div>
 
-            <div className="p-5 sm:p-6 bg-card flex flex-col">
-              <div className="grid grid-cols-3 gap-4 border-b border-border/50 pb-5 mb-4">
+            <div className="p-4 sm:p-6 bg-card flex flex-col">
+              <div className="grid grid-cols-3 gap-2 sm:gap-4 border-b border-border/50 pb-4 sm:pb-5 mb-4">
                 {routeStats.map((stat, i) => (
-                  <div key={i} className="flex flex-col gap-1">
-                    <span className="text-[12px] font-bold text-muted-foreground">
+                  <div key={i} className="flex flex-col gap-0.5 sm:gap-1">
+                    <span className="text-[11px] sm:text-[12px] font-bold text-muted-foreground truncate">
                       {stat.label}
                     </span>
                     <span
-                      className={`text-[15px] font-bold ${stat.isHighlight ? "text-emerald-600" : "text-foreground"}`}
+                      className={`text-[13px] sm:text-[15px] font-bold truncate ${stat.isHighlight ? "text-emerald-600" : "text-foreground"}`}
                     >
                       {stat.value}
                     </span>
                   </div>
                 ))}
               </div>
-              <div className="flex items-center gap-2 text-[12px] font-medium text-muted-foreground">
-                <LuInfo className="w-3.5 h-3.5" /> Prices and times are
+              <div className="flex items-center gap-2 text-[11px] sm:text-[12px] font-medium text-muted-foreground">
+                <LuInfo className="w-3.5 h-3.5 shrink-0" /> Prices and times are
                 estimates and may vary.
               </div>
             </div>
@@ -380,10 +324,10 @@ export const ComparePage = () => {
         <div className="xl:col-span-7 flex flex-col gap-6">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex flex-col">
-              <h3 className="font-bold text-[17px] text-foreground">
+              <h3 className="font-bold text-[16px] sm:text-[17px] text-foreground">
                 Available Options
               </h3>
-              <p className="text-[13px] font-medium text-muted-foreground mt-1">
+              <p className="text-xs sm:text-[13px] font-medium text-muted-foreground mt-0.5 sm:mt-1">
                 We found {quotes.length} courier services for your delivery.
               </p>
             </div>
@@ -392,7 +336,7 @@ export const ComparePage = () => {
                 Sort by
               </span>
               <Select defaultValue="Price (Low to High)">
-                <SelectTrigger className="w-full sm:w-50 h-10 border-border bg-card rounded-xl text-[13px] font-bold shadow-sm">
+                <SelectTrigger className="w-full sm:w-52 h-10 border-border bg-card rounded-xl text-[13px] font-bold shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent
@@ -418,7 +362,6 @@ export const ComparePage = () => {
                   key={courier.id}
                   courier={courier}
                   bestPrice={bestPrice}
-                  handler={handleBookingRedirect}
                 />
               ))
             ) : (

@@ -9,8 +9,7 @@ export function authenticateUser(req, res, next) {
 
     const token = authHeader.split(" ")[1];
 
-    console.log("MY TOKEN IS:", token);
-    console.log("MY SECRET IS:", process.env.JWT_SECRET);
+
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     req.user = decoded;

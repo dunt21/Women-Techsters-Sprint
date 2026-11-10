@@ -25,18 +25,18 @@ export const CourierCard = ({
     courierStyles[courier.courier as keyof typeof courierStyles];
 
   return (
-    <div className="bg-card border border-border/60 rounded-[1.5rem] p-5 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition-all duration-300 cursor-pointer">
+    <div className="bg-card border border-border/60 rounded-[1.5rem] p-4 sm:p-6 shadow-sm hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
       {/* Card Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div className="flex items-center gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-5 sm:mb-6">
+        <div className="flex items-center gap-3 sm:gap-4">
           <div
-            className={`w-13 h-13 rounded-xl flex items-center justify-center text-[22px] font-black shrink-0 shadow-sm ${courierStyle.logoBg}`}
+            className={`w-12 h-12 sm:w-13 sm:h-13 rounded-xl flex items-center justify-center text-[20px] sm:text-[22px] font-black shrink-0 shadow-sm ${courierStyle.logoBg}`}
           >
             {courierStyle.logoLetter}
           </div>
-          <div className="flex flex-col gap-0.5">
-            <div className="flex items-center gap-2">
-              <h4 className="font-bold text-[17px] text-foreground">
+          <div className="flex flex-col gap-0.5 min-w-0">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h4 className="font-bold text-[16px] sm:text-[17px] text-foreground truncate">
                 {courier.courier}
               </h4>
               {courier.price === bestPrice && (
@@ -45,20 +45,21 @@ export const CourierCard = ({
                 </span>
               )}
             </div>
-            <div className="flex items-center gap-1.5 text-[13px] font-medium text-muted-foreground mt-0.5">
-              <LuStar className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500" />
+            <div className="flex items-center gap-1.5 text-[12px] sm:text-[13px] font-medium text-muted-foreground mt-0.5">
+              <LuStar className="w-3.5 h-3.5 text-yellow-500 fill-yellow-500 shrink-0" />
               <span className="font-bold text-foreground">
                 {courier.rating}
               </span>
               <span>•</span>
+              <span className="truncate">{courier.speedTier || "Courier"}</span>
             </div>
           </div>
         </div>
 
         {!isHistoryView && (
-          <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-start gap-2 pt-2 sm:pt-0 border-t border-border/40 sm:border-0 w-full sm:w-auto shrink-0">
             <Button
-              className="h-10 px-6 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] text-white shadow-sm hover:shadow-md transition-all text-[13px]"
+              className="h-10 px-6 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] text-white shadow-sm hover:shadow-md transition-all text-[13px] w-full sm:w-auto"
               onClick={() => handler?.(courier.courier)}
             >
               Select
@@ -71,36 +72,36 @@ export const CourierCard = ({
       </div>
 
       {/* Details Row */}
-      <div className="grid grid-cols-3 gap-4 mb-6">
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-bold text-muted-foreground flex items-center gap-1.5">
-            <LuClock className="w-3.5 h-3.5" /> Estimated time
+      <div className="grid grid-cols-3 gap-2 sm:gap-4">
+        <div className="flex flex-col gap-1">
+          <span className="text-[11px] sm:text-[12px] font-bold text-muted-foreground flex items-center gap-1 sm:gap-1.5 truncate">
+            <LuClock className="w-3.5 h-3.5 shrink-0" /> Est. time
           </span>
-          <span className="font-bold text-[15px] text-foreground">
+          <span className="font-bold text-[13px] sm:text-[15px] text-foreground truncate">
             {courier.estimatedTime}
           </span>
-          <span className="text-[11px] font-semibold text-muted-foreground">
+          <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground truncate">
             {courier.speedTier}
           </span>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-bold text-muted-foreground flex items-center gap-1.5">
-            <LuTag className="w-3.5 h-3.5" /> Price
+        <div className="flex flex-col gap-1">
+          <span className="text-[11px] sm:text-[12px] font-bold text-muted-foreground flex items-center gap-1 sm:gap-1.5 truncate">
+            <LuTag className="w-3.5 h-3.5 shrink-0" /> Price
           </span>
-          <span className="font-bold text-[15px] text-emerald-600">
+          <span className="font-bold text-[13px] sm:text-[15px] text-emerald-600 truncate">
             GHS {courier.price}
           </span>
         </div>
 
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[12px] font-bold text-muted-foreground flex items-center gap-1.5">
-            <LuCalendar className="w-3.5 h-3.5" /> Drop-off
+        <div className="flex flex-col gap-1">
+          <span className="text-[11px] sm:text-[12px] font-bold text-muted-foreground flex items-center gap-1 sm:gap-1.5 truncate">
+            <LuCalendar className="w-3.5 h-3.5 shrink-0" /> Drop-off
           </span>
-          <span className="font-bold text-[14px] text-foreground">
+          <span className="font-bold text-[12px] sm:text-[14px] text-foreground truncate">
             {courier.dropOffDate}
           </span>
-          <span className="text-[11px] font-semibold text-muted-foreground">
+          <span className="text-[10px] sm:text-[11px] font-semibold text-muted-foreground truncate">
             {courier.dropOffTime}
           </span>
         </div>
