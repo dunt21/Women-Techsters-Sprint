@@ -170,47 +170,68 @@ export const DashboardPage = () => {
           </div>
 
           <div className="flex flex-col gap-3">
-            {loading
-              ? [0, 1, 2].map((i: number) => <ComparisonCardSkeleton key={i} />)
-              : recentComparisons.map((item) => (
-                  <div
-                    key={item.id}
-                    onClick={() =>
-                      navigate("/history", {
-                        state: {
-                          preSelectedId: item.id,
-                        },
-                      })
-                    }
-                    className="flex items-center justify-between p-3.5 sm:p-4 px-4 sm:px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-sm hover:border-slate-200 transition-all cursor-pointer group gap-3"
-                  >
-                    <div className="flex items-center gap-3 sm:gap-5 min-w-0">
-                      <div
-                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 shrink-0 ${item.iconClass}`}
-                      >
-                        <LuSearch className="w-5 h-5 sm:w-6 sm:h-6" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="font-bold text-slate-900 text-sm sm:text-[15px] truncate">
-                          {item.title}
-                        </p>
-                        <p className="text-xs sm:text-[13px] font-medium text-slate-500 mt-0.5 truncate">
-                          {item.subtitle}
-                        </p>
-                      </div>
+            {loading ? (
+              [0, 1, 2].map((i: number) => <ComparisonCardSkeleton key={i} />)
+            ) : recentComparisons.length > 0 ? (
+              recentComparisons.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() =>
+                    navigate("/history", {
+                      state: {
+                        preSelectedId: item.id,
+                      },
+                    })
+                  }
+                  className="flex items-center justify-between p-3.5 sm:p-4 px-4 sm:px-5 bg-white rounded-2xl border border-slate-100 hover:shadow-sm hover:border-slate-200 transition-all cursor-pointer group gap-3"
+                >
+                  <div className="flex items-center gap-3 sm:gap-5 min-w-0">
+                    <div
+                      className={`w-10 h-10 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 shrink-0 ${item.iconClass}`}
+                    >
+                      <LuSearch className="w-5 h-5 sm:w-6 sm:h-6" />
                     </div>
-                    <div className="text-right shrink-0">
-                      <p className="font-bold text-slate-900 text-sm sm:text-[15px]">
-                        {item.price}
+                    <div className="min-w-0">
+                      <p className="font-bold text-slate-900 text-sm sm:text-[15px] truncate">
+                        {item.title}
                       </p>
-                      <p
-                        className={`text-xs sm:text-[13px] font-semibold mt-0.5 ${item.statusClass}`}
-                      >
-                        {item.status}
+                      <p className="text-xs sm:text-[13px] font-medium text-slate-500 mt-0.5 truncate">
+                        {item.subtitle}
                       </p>
                     </div>
                   </div>
-                ))}
+                  <div className="text-right shrink-0">
+                    <p className="font-bold text-slate-900 text-sm sm:text-[15px]">
+                      {item.price}
+                    </p>
+                    <p
+                      className={`text-xs sm:text-[13px] font-semibold mt-0.5 ${item.statusClass}`}
+                    >
+                      {item.status}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="flex flex-col items-center justify-center py-10 sm:py-12 px-4 text-center bg-white rounded-2xl border border-slate-100 shadow-xs">
+                <div className="w-12 h-12 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-400 mb-3">
+                  <LuSearch className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm sm:text-base font-bold text-slate-900">
+                  No recent comparisons yet
+                </h4>
+                <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1 max-w-xs">
+                  Compare courier prices between pickup and drop-off points to
+                  see your activity here.
+                </p>
+                <Link
+                  to="/compare"
+                  className="mt-4 inline-flex items-center gap-1.5 text-xs sm:text-sm font-bold text-primary hover:underline"
+                >
+                  Start a comparison &rarr;
+                </Link>
+              </div>
+            )}
           </div>
         </div>
 
