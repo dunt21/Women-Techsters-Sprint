@@ -3,7 +3,7 @@ import { Outlet, Navigate } from "react-router-dom";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { ProfileDropdown } from "@/components/layout/ProfileDropdown";
 import { useAuth } from "@/context/AuthContext";
-import { LuSearch, LuBell, LuMenu } from "react-icons/lu";
+import { LuMenu } from "react-icons/lu";
 
 export const AuthenticatedLayout = () => {
   const { user } = useAuth();
@@ -33,21 +33,7 @@ export const AuthenticatedLayout = () => {
             </button>
           </div>
 
-          <div className="flex items-center gap-3 sm:gap-6">
-            <button
-              className="text-slate-400 hover:text-slate-600 p-1.5 transition-colors"
-              aria-label="Search"
-            >
-              <LuSearch className="w-5 h-5" />
-            </button>
-            <button
-              className="text-slate-400 hover:text-slate-600 p-1.5 transition-colors relative"
-              aria-label="Notifications"
-            >
-              <LuBell className="w-5 h-5" />
-              <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full border border-white"></span>
-            </button>
-            <div className="h-5 sm:h-6 w-px bg-slate-200"></div>
+          <div className="flex items-center">
             <ProfileDropdown />
           </div>
         </header>

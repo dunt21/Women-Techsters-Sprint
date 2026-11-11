@@ -45,10 +45,12 @@ export const DashboardPage = () => {
           headers: { authorization: `Bearer ${token}` },
         });
 
-        const rawHistory = response.data.data;
+        const rawHistory = response.data?.data || [];
 
         // Use our reusable utility to format the data
-        const formatted = formatHistoryData(rawHistory);
+        const formatted = Array.isArray(rawHistory)
+          ? formatHistoryData(rawHistory)
+          : [];
 
         // We only want the 3 most recent searches for the dashboard!
         const top3 = formatted.slice(0, 3);

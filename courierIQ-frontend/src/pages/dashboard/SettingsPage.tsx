@@ -3,13 +3,6 @@ import { useAuth } from "@/context/AuthContext";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import React, { type ReactNode } from "react";
 import type { IconType } from "react-icons/lib";
 
@@ -73,39 +66,6 @@ export const SettingsPage = () => {
       type: "email",
       defaultValue: user?.email || "suadmacaulay@gmail.com",
       fullWidth: true,
-    },
-  ];
-
-  const deliveryPreferences = [
-    {
-      id: "pickup",
-      label: "Default pickup location",
-      type: "input",
-      placeholder: "e.g. Accra, Ghana",
-      defaultValue: "Accra, Ghana",
-      icon: LuTruck,
-    },
-    {
-      id: "courier",
-      label: "Preferred courier",
-      type: "select",
-      options: [
-        { value: "no-pref", label: "No preference" },
-        { value: "dhl", label: "DHL Express" },
-        { value: "fedex", label: "FedEx" },
-      ],
-      defaultValue: "no-pref",
-    },
-    {
-      id: "speed",
-      label: "Preferred delivery speed",
-      type: "select",
-      options: [
-        { value: "fastest", label: "Fastest available" },
-        { value: "cheapest", label: "Cheapest available" },
-        { value: "standard", label: "Standard (3-5 days)" },
-      ],
-      defaultValue: "fastest",
     },
   ];
 
@@ -247,52 +207,6 @@ export const SettingsPage = () => {
           >
             <LuShield className="w-4 h-4 mr-2" /> Change Password
           </Button>
-        </div>
-      </SectionCard>
-
-      {/* Delivery Section */}
-      <SectionCard
-        icon={LuTruck}
-        title="Delivery Preferences"
-        description="Set your default preferences for comparing deliveries."
-        iconBg="bg-emerald-50"
-        iconColor="text-emerald-600"
-      >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-          {deliveryPreferences.map((pref) => (
-            <div key={pref.id} className="flex flex-col gap-2">
-              <label className="text-[13px] font-bold text-foreground">
-                {pref.label}
-              </label>
-              {pref.type === "input" ? (
-                <div className="relative">
-                  <Input
-                    placeholder={pref.placeholder}
-                    defaultValue={pref.defaultValue as string}
-                    className="pl-9 bg-background border-border text-foreground rounded-xl h-12 shadow-sm font-medium"
-                  />
-                  {pref.icon && (
-                    <pref.icon className="w-4 h-4 text-muted-foreground absolute left-3.5 top-1/2 -translate-y-1/2" />
-                  )}
-                </div>
-              ) : (
-                <Select defaultValue={pref.defaultValue as string}>
-                  <SelectTrigger className="w-full bg-background border-border text-foreground rounded-xl h-12 shadow-sm font-medium">
-                    <SelectValue
-                      placeholder={`Select ${pref.label.toLowerCase()}`}
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {pref.options?.map((opt) => (
-                      <SelectItem key={opt.value} value={opt.value}>
-                        {opt.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
-            </div>
-          ))}
         </div>
       </SectionCard>
 

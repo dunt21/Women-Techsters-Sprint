@@ -1,8 +1,6 @@
 import {
   LuMapPin,
   LuPlus,
-  LuClock,
-  LuChevronDown,
   LuChevronRight,
   LuInfo,
 } from "react-icons/lu";
@@ -143,23 +141,14 @@ export const ComparePage = () => {
   return (
     <div className="w-full flex flex-col gap-6 max-w-7xl mx-auto animate-fade-in-up pb-12 h-full">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex flex-col">
-          <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
-            Compare Delivery
-          </h1>
-          <p className="text-muted-foreground mt-1 text-sm sm:text-[15px] font-medium">
-            Enter your delivery details to compare prices, delivery times and
-            choose the best option.
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          className="h-10 px-4 rounded-xl font-bold border-border bg-background hover:bg-secondary text-foreground shadow-sm w-full sm:w-auto shrink-0"
-        >
-          <LuClock className="w-4 h-4 mr-2" /> Recent Searches{" "}
-          <LuChevronDown className="w-4 h-4 ml-1" />
-        </Button>
+      <div className="flex flex-col">
+        <h1 className="text-2xl sm:text-3xl font-bold text-foreground tracking-tight">
+          Compare Delivery
+        </h1>
+        <p className="text-muted-foreground mt-1 text-sm sm:text-[15px] font-medium">
+          Enter your delivery details to compare prices, delivery times and
+          choose the best option.
+        </p>
       </div>
 
       {/* Main Grid Layout */}

@@ -2,6 +2,7 @@ import express from "express";
 import authRoutes from "./routes/authRoutes.js";
 import comparisonRoutes from "./routes/comparisonRoutes.js";
 import deliveryRoutes from "./routes/deliveryRoutes.js";
+import storageRoutes from "./routes/storageRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 import cors from "cors";
 
@@ -13,6 +14,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/comparison", comparisonRoutes);
 app.use("/orderDelivery", deliveryRoutes);
+app.use("/api/storage", storageRoutes);
 
 app.get("/", (req, res) => {
   res.send("We activeeee");
