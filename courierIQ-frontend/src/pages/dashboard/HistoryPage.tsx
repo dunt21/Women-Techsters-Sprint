@@ -143,10 +143,7 @@ export const HistoryPage = () => {
             <SelectTrigger className="w-full sm:w-40 h-11 sm:h-12 bg-card border-border rounded-xl text-sm">
               <SelectValue placeholder="Couriers" />
             </SelectTrigger>
-            <SelectContent
-              alignItemWithTrigger={false}
-              className="w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width)"
-            >
+            <SelectContent>
               {courierOptions.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}
@@ -159,10 +156,7 @@ export const HistoryPage = () => {
             <SelectTrigger className="w-full sm:w-36 h-11 sm:h-12 bg-card border-border rounded-xl text-sm">
               <SelectValue placeholder="Time" />
             </SelectTrigger>
-            <SelectContent
-              alignItemWithTrigger={false}
-              className="w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width)"
-            >
+            <SelectContent>
               {timeOptions.map((opt) => (
                 <SelectItem key={opt.value} value={opt.value}>
                   {opt.label}

@@ -7,7 +7,7 @@ import {
   LuInfo,
 } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
+
 import {
   Select,
   SelectContent,
@@ -178,39 +178,20 @@ export const ComparePage = () => {
                 <label className="text-[13px] font-bold text-muted-foreground">
                   Pickup location
                 </label>
-                <div className="relative flex items-center bg-background border border-border rounded-xl h-12 px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                  <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 ml-1">
-                    <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
-                  </div>
-                  {/* <Input
-                    type="text"
-                    value={userInput.pickup}
-                    error={errors.pickup}
-                    placeholder="Please enter a pickup point"
-                    onChange={(e) =>
-                      setUserInput({ ...userInput, pickup: e.target.value })
-                    }
-                    className="flex-1 bg-transparent border-none outline-none px-3 text-[14px] font-bold text-foreground"
-                  /> */}
-
-                  <div className="flex-1 w-full">
-                    <LocationInput
-                      value={userInput.pickup}
-                      onChange={(search) =>
-                        setUserInput({ ...userInput, pickup: search })
-                      }
-                      placeholder="Please enter a pickup point"
-                      onSelectCoords={(coords) => {
-                        setPickupCoords({
-                          longitude: coords.longitude,
-                          latitude: coords.latitude,
-                        });
-                      }}
-                    />
-                  </div>
-
-                  <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0" />
-                </div>
+                <LocationInput
+                  dotColor="emerald"
+                  value={userInput.pickup}
+                  onChange={(search) =>
+                    setUserInput({ ...userInput, pickup: search })
+                  }
+                  placeholder="Please enter a pickup point"
+                  onSelectCoords={(coords) => {
+                    setPickupCoords({
+                      longitude: coords.longitude,
+                      latitude: coords.latitude,
+                    });
+                  }}
+                />
                 <button
                   type="button"
                   className="text-[12px] font-bold text-primary flex items-center gap-1.5 mt-1 hover:underline w-fit"
@@ -224,28 +205,20 @@ export const ComparePage = () => {
                 <label className="text-[13px] font-bold text-muted-foreground">
                   Drop-off location
                 </label>
-                <div className="relative flex items-center bg-background border border-border rounded-xl h-12 px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
-                  <div className="w-4 h-4 rounded-full bg-destructive/10 flex items-center justify-center shrink-0 ml-1">
-                    <div className="w-2 h-2 rounded-full bg-destructive"></div>
-                  </div>
-                  <div className="flex-1 w-full">
-                    <LocationInput
-                      value={userInput.dropOff}
-                      onChange={(search) =>
-                        setUserInput({ ...userInput, dropOff: search })
-                      }
-                      placeholder="Please enter a drop-off point"
-                      onSelectCoords={(coords) => {
-                        setDropoffCoords({
-                          longitude: coords.longitude,
-                          latitude: coords.latitude,
-                        });
-                      }}
-                    />
-                  </div>
-
-                  <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0" />
-                </div>
+                <LocationInput
+                  dotColor="destructive"
+                  value={userInput.dropOff}
+                  onChange={(search) =>
+                    setUserInput({ ...userInput, dropOff: search })
+                  }
+                  placeholder="Please enter a drop-off point"
+                  onSelectCoords={(coords) => {
+                    setDropoffCoords({
+                      longitude: coords.longitude,
+                      latitude: coords.latitude,
+                    });
+                  }}
+                />
               </div>
 
               <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
@@ -281,20 +254,6 @@ export const ComparePage = () => {
                 dropoffCoords={dropoffCoords}
               />
               <div className="absolute inset-0 bg-background/10"></div>
-              {/* Fake UI Overlay on Map */}
-              <div className="absolute top-4 right-4 flex flex-col gap-2">
-                <div className="bg-background rounded-lg shadow-md border border-border flex flex-col overflow-hidden">
-                  <button className="w-9 h-9 flex items-center justify-center hover:bg-secondary border-b border-border transition-colors">
-                    <LuPlus className="w-4 h-4 text-foreground" />
-                  </button>
-                  <button className="w-9 h-9 flex items-center justify-center hover:bg-secondary transition-colors">
-                    <div className="w-3 h-1 bg-foreground rounded-full"></div>
-                  </button>
-                </div>
-                <button className="w-9 h-9 bg-background rounded-lg shadow-md border border-border flex items-center justify-center hover:bg-secondary transition-colors">
-                  <LuMapPin className="w-4 h-4 text-foreground" />
-                </button>
-              </div>
             </div>
 
             <div className="p-4 sm:p-6 bg-card flex flex-col">
@@ -339,10 +298,7 @@ export const ComparePage = () => {
                 <SelectTrigger className="w-full sm:w-52 h-10 border-border bg-card rounded-xl text-[13px] font-bold shadow-sm">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent
-                  alignItemWithTrigger={false}
-                  className="w-(--radix-select-trigger-width) min-w-(--radix-select-trigger-width)"
-                >
+                <SelectContent>
                   <SelectItem value="Price (Low to High)">
                     Price (Low to High)
                   </SelectItem>

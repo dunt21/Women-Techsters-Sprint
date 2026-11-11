@@ -8,7 +8,10 @@ import Map, {
 } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useEffect, useState, useRef } from "react";
-import maplibregl from "maplibre-gl";
+import * as maplibregl from "maplibre-gl";
+import maplibreWorkerUrl from "maplibre-gl/dist/maplibre-gl-worker.mjs?worker&url";
+
+maplibregl.setWorkerUrl(maplibreWorkerUrl);
 
 interface RouteMapProps {
   pickupCoords?: { latitude: number; longitude: number } | null;
@@ -29,8 +32,6 @@ export const RouteMap = ({ pickupCoords, dropoffCoords }: RouteMapProps) => {
       navigator.geolocation.getCurrentPosition((position) => {
         const lat = position.coords.latitude;
         const long = position.coords.longitude;
-
-        console.log(position);
 
         setViewState({
           latitude: lat,
@@ -81,6 +82,7 @@ export const RouteMap = ({ pickupCoords, dropoffCoords }: RouteMapProps) => {
         ref={mapRef}
         mapLib={maplibregl}
         {...viewState}
+        style={{ width: "100%", height: "100%" }}
         mapStyle="https://tiles.openfreemap.org/styles/liberty"
         onMove={(event) => setViewState(event.viewState)}
       >

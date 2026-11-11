@@ -1,6 +1,6 @@
 import { fetchLocationSuggestions } from "@/api/location";
 import { useState, useEffect, useRef } from "react";
-import { LuMapPin, LuLoader2, LuX } from "react-icons/lu";
+import { LuMapPin, LuLoader, LuX } from "react-icons/lu";
 
 interface LocationSuggestion {
   place_id: string;
@@ -8,7 +8,7 @@ interface LocationSuggestion {
   display_place?: string;
   display_address?: string;
   lat: string;
-  long: string;
+  lon: string;
 }
 
 interface LocationInputProps {
@@ -18,6 +18,7 @@ interface LocationInputProps {
   placeholder?: string;
   countryCode?: string;
   className?: string;
+  dotColor?: "emerald" | "destructive";
 }
 
 interface LocationInputState {
@@ -39,13 +40,15 @@ export const LocationInput = ({
   placeholder = "Search location...",
   countryCode = "gh",
   className = "",
+  dotColor,
 }: LocationInputProps) => {
   const [state, setState] = useState(initialState);
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
 
   //debounce effect for searching for locations
   useEffect(() => {
+    let isCurrent = true;
+
     const timer = setTimeout(async () => {
       try {
         if (value.length < 3 || !value) return;
@@ -53,6 +56,8 @@ export const LocationInput = ({
         setState((prev) => ({ ...prev, loading: true }));
 
         const data = await fetchLocationSuggestions(value, countryCode);
+
+        if (!isCurrent) return;
 
         setState((prev) => ({
           ...prev,
@@ -67,7 +72,10 @@ export const LocationInput = ({
       }
     }, 350);
 
-    return () => clearTimeout(timer);
+    return () => {
+      isCurrent = false;
+      clearTimeout(timer);
+    };
   }, [value, countryCode]);
 
   // Close dropdown when clicking outside
@@ -86,11 +94,13 @@ export const LocationInput = ({
   }, []);
 
   const handleSelect = (selectedVal: LocationSuggestion) => {
-    onChange(selectedVal.display_name);
+    const placeName =
+      selectedVal.display_place || selectedVal.display_name.split(",")[0].trim();
+    onChange(placeName);
 
     onSelectCoords({
       latitude: parseFloat(selectedVal.lat),
-      longitude: parseFloat(selectedVal.long),
+      longitude: parseFloat(selectedVal.lon || (selectedVal as unknown as { long: string }).long || "0"),
     });
 
     setState(initialState);
@@ -102,8 +112,19 @@ export const LocationInput = ({
   };
 
   return (
-    <div ref={wrapperRef} className="relative w-full flex-1">
-      <div className="relative flex items-center w-full">
+    <div ref={wrapperRef} className="relative w-full">
+      <div className="relative flex items-center bg-background border border-border rounded-xl h-12 px-3 shadow-sm focus-within:ring-2 focus-within:ring-primary/20 focus-within:border-primary transition-all">
+        {dotColor === "emerald" && (
+          <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 ml-0.5 mr-2">
+            <div className="w-2 h-2 rounded-full bg-emerald-500"></div>
+          </div>
+        )}
+        {dotColor === "destructive" && (
+          <div className="w-4 h-4 rounded-full bg-destructive/10 flex items-center justify-center shrink-0 ml-0.5 mr-2">
+            <div className="w-2 h-2 rounded-full bg-destructive"></div>
+          </div>
+        )}
+
         <input
           type="text"
           value={value}
@@ -113,54 +134,66 @@ export const LocationInput = ({
               setState((prev) => ({ ...prev, isOpen: true }));
           }}
           placeholder={placeholder}
-          className={`w-full bg-transparent border-none outline-none text-[14px] font-bold text-foreground placeholder:text-muted-foreground placeholder:font-medium pr-8 ${className}`}
+          className={`flex-1 w-full bg-transparent border-none outline-none text-[14px] font-bold text-foreground placeholder:text-muted-foreground placeholder:font-medium ${className}`}
         />
 
         {state.loading && (
-          <LuLoader2 className="w-4 h-4 text-primary animate-spin absolute right-2 shrink-0 pointer-events-none" />
+          <LuLoader className="w-4 h-4 text-primary animate-spin shrink-0 ml-2" />
         )}
 
         {!state.loading && value && (
           <button
             type="button"
             onClick={handleClear}
-            className="p-1 text-muted-foreground hover:text-foreground rounded-full transition-colors absolute right-1"
+            className="p-1 text-muted-foreground hover:text-foreground rounded-full transition-colors shrink-0 ml-1 cursor-pointer"
             aria-label="Clear input"
           >
             <LuX className="w-3.5 h-3.5" />
           </button>
         )}
+
+        <LuMapPin className="w-4 h-4 text-muted-foreground shrink-0 ml-2" />
       </div>
 
-      {/* STEP 3: SUGGESTIONS DROPDOWN UI                                      */}
+      {/* STEP 3: SUGGESTIONS DROPDOWN UI */}
       {state.isOpen && state.suggestions.length > 0 && (
         <div className="absolute left-0 right-0 top-full mt-2 bg-card border border-border/80 rounded-2xl shadow-xl overflow-hidden z-50 max-h-64 overflow-y-auto divide-y divide-border/40 animate-in fade-in-0 zoom-in-95 duration-150">
-          {state.suggestions.map((item) => (
-            <button
-              key={item.place_id}
-              type="button"
-              onClick={() => handleSelect(item)}
-              className="w-full text-left p-3.5 hover:bg-secondary/60 flex items-start gap-3 transition-colors group cursor-pointer"
-            >
-              {/* Pin Icon */}
-              <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 mt-0.5 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                <LuMapPin className="w-3.5 h-3.5" />
-              </div>
+          {state.suggestions.map((item) => {
+            const placeName =
+              item.display_place || item.display_name.split(",")[0].trim();
+            const parts = item.display_name.split(",").map((p) => p.trim());
+            const secondaryText =
+              parts.length > 1 ? parts.slice(1, 3).join(", ") : "";
 
-              {/* Text Container */}
-              <div className="flex flex-col min-w-0">
-                {/* Primary title: e.g. "Kotoka International Airport" */}
-                <p className="font-bold text-sm text-foreground truncate">
-                  {item.display_place || item.display_name.split(",")[0]}
-                </p>
+            return (
+              <button
+                key={item.place_id}
+                type="button"
+                onClick={() => handleSelect(item)}
+                className="w-full text-left p-3.5 hover:bg-secondary/60 flex items-center gap-3 transition-colors group cursor-pointer"
+              >
+                {/* Pin Icon */}
+                <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0 group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
+                  <LuMapPin className="w-3.5 h-3.5" />
+                </div>
 
-                {/* Subtitle / Full Address */}
-                <p className="text-xs text-muted-foreground truncate mt-0.5">
-                  {item.display_name}
-                </p>
-              </div>
-            </button>
-          ))}
+                {/* Text Container */}
+                <div className="flex flex-col min-w-0 flex-1">
+                  {/* Primary title: e.g. "Kotoka International Airport" or "Eseefoo Close" */}
+                  <p className="font-bold text-sm text-foreground truncate">
+                    {placeName}
+                  </p>
+
+                  {/* Subtitle: concise suburb / city context */}
+                  {secondaryText && (
+                    <p className="text-xs text-muted-foreground truncate mt-0.5">
+                      {secondaryText}
+                    </p>
+                  )}
+                </div>
+              </button>
+            );
+          })}
         </div>
       )}
     </div>

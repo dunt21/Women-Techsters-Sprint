@@ -282,7 +282,7 @@ export const SettingsPage = () => {
                       placeholder={`Select ${pref.label.toLowerCase()}`}
                     />
                   </SelectTrigger>
-                  <SelectContent alignItemWithTrigger={false} className="w-[var(--radix-select-trigger-width)] min-w-[var(--radix-select-trigger-width)]">
+                  <SelectContent>
                     {pref.options?.map((opt) => (
                       <SelectItem key={opt.value} value={opt.value}>
                         {opt.label}
