@@ -57,7 +57,6 @@ export const HistoryPage = () => {
         if (userString) {
           const userObj = JSON.parse(userString);
           const userId = userObj.id;
-          console.log("My User ID is:", userId);
         }
 
         const token = localStorage.getItem("tokens");

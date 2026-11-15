@@ -1,32 +1,11 @@
-import {
-  LuMapPin,
-  LuPlus,
-  LuChevronRight,
-  LuInfo,
-} from "react-icons/lu";
-import { Button } from "@/components/ui/button";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useState } from "react";
-import { CourierCard } from "@/components/dashboard/CourierCard";
-import { api } from "@/api/axios";
-import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
 import axios from "axios";
-import { LocationInput } from "@/components/shared/LocationInput";
-import { RouteMap } from "@/components/shared/RouteMap";
-
-const routeStats = [
-  { label: "Estimated distance", value: "250 km" },
-  { label: "Estimated time", value: "~ 4h 30m - 5h 15m" },
-  { label: "Best price", value: "GHS 47", isHighlight: true },
-];
+import toast from "react-hot-toast";
+import { api } from "@/api/axios";
+import { DeliveryForm } from "@/components/compare/DeliveryForm";
+import { RouteOverviewCard } from "@/components/compare/RouteOverviewCard";
+import { CourierQuotesList } from "@/components/compare/CourierQuotesList";
 
 export const ComparePage = () => {
   const location = useLocation();
@@ -37,31 +16,26 @@ export const ComparePage = () => {
   });
   const [quotes, setQuotes] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({ pickup: "", dropOff: "" });
   const [bestPrice, setBestPrice] = useState(0);
-  const [pickupCoords, setPickupCoords] = useState<any>(null);
-  const [dropoffCoords, setDropoffCoords] = useState<any>(null);
+  const [pickupCoords, setPickupCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
+  const [dropoffCoords, setDropoffCoords] = useState<{
+    latitude: number;
+    longitude: number;
+  } | null>(null);
 
   const locationIqKey = import.meta.env.VITE_LOCATIONIQ_API_KEY;
 
-  console.log(errors);
-
   const handleCompare = async () => {
     if (userInput.pickup.trim() === "") {
-      setErrors((prev) => ({
-        ...prev,
-        pickup: "Pickup point cannot be empty!",
-      }));
-
+      toast.error("Pickup point cannot be empty!");
       return;
     }
 
     if (userInput.dropOff.trim().length <= 2) {
-      setErrors((prev) => ({
-        ...prev,
-        dropOff: "DropOff point cannot be empty!",
-      }));
-
+      toast.error("Drop-off point cannot be empty!");
       return;
     }
 
@@ -83,13 +57,11 @@ export const ComparePage = () => {
         ...returnedQuotes.map((quote: { price: number }) => quote.price),
       );
       setBestPrice(minPrice);
-
       setQuotes(returnedQuotes);
 
       toast.success(`${data.message} 👏`);
     } catch (error: any) {
       const backendErr = error?.response?.data?.message;
-
       toast.error(backendErr ? backendErr : "Unable to search prices");
     } finally {
       setLoading(false);
@@ -127,6 +99,7 @@ export const ComparePage = () => {
         },
         (error) => {
           console.error("Browser blocked us:", error.message);
+          toast.error("Could not access your location. Please check browser permissions.");
         },
         {
           enableHighAccuracy: true,
@@ -134,7 +107,7 @@ export const ComparePage = () => {
         },
       );
     } else {
-      console.error("Your browser does not support Geolocation!");
+      toast.error("Your browser does not support Geolocation!");
     }
   };
 
@@ -155,199 +128,25 @@ export const ComparePage = () => {
       <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 mt-2 sm:mt-4 mb-10">
         {/* Left Column: Forms & Map */}
         <div className="xl:col-span-5 flex flex-col gap-6">
-          {/* Delivery Details Card */}
-          <div className="bg-card border border-border/60 rounded-[1.5rem] p-4 sm:p-6 lg:p-7 shadow-sm">
-            <h3 className="font-bold text-[16px] text-foreground mb-6">
-              Delivery Details
-            </h3>
+          <DeliveryForm
+            userInput={userInput}
+            setUserInput={setUserInput}
+            setPickupCoords={setPickupCoords}
+            setDropoffCoords={setDropoffCoords}
+            onCompare={handleCompare}
+            loading={loading}
+            onGetCurLocation={getCurLocation}
+          />
 
-            {/* Locations */}
-            <div className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1.5">
-                <label className="text-[13px] font-bold text-muted-foreground">
-                  Pickup location
-                </label>
-                <LocationInput
-                  dotColor="emerald"
-                  value={userInput.pickup}
-                  onChange={(search) =>
-                    setUserInput({ ...userInput, pickup: search })
-                  }
-                  placeholder="Please enter a pickup point"
-                  onSelectCoords={(coords) => {
-                    setPickupCoords({
-                      longitude: coords.longitude,
-                      latitude: coords.latitude,
-                    });
-                  }}
-                />
-                <button
-                  type="button"
-                  className="text-[12px] font-bold text-primary flex items-center gap-1.5 mt-1 hover:underline w-fit"
-                  onClick={() => getCurLocation()}
-                >
-                  Use my current location <LuMapPin className="w-3.5 h-3.5" />
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-1.5 mt-2">
-                <label className="text-[13px] font-bold text-muted-foreground">
-                  Drop-off location
-                </label>
-                <LocationInput
-                  dotColor="destructive"
-                  value={userInput.dropOff}
-                  onChange={(search) =>
-                    setUserInput({ ...userInput, dropOff: search })
-                  }
-                  placeholder="Please enter a drop-off point"
-                  onSelectCoords={(coords) => {
-                    setDropoffCoords({
-                      longitude: coords.longitude,
-                      latitude: coords.latitude,
-                    });
-                  }}
-                />
-              </div>
-
-              <Button className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1">
-                <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
-                  <LuPlus className="w-3.5 h-3.5" />
-                </div>
-                Add stop
-              </Button>
-            </div>
-
-            <div className="h-px w-full bg-border/60 my-6"></div>
-
-            <Button
-              className="w-full h-12 rounded-xl font-bold bg-[#3b41c5] hover:bg-[#2d32a3] hover:shadow-md text-white shadow-sm active:scale-95 transition-all duration-300 text-[14px]"
-              onClick={handleCompare}
-              disabled={loading}
-            >
-              {loading ? (
-                "Comparing"
-              ) : (
-                <>
-                  Compare Options <LuChevronRight className="w-4 h-4 ml-1" />
-                </>
-              )}
-            </Button>
-          </div>
-
-          {/* Map & Stats */}
-          <div className="bg-card border border-border/60 rounded-[1.5rem] overflow-hidden shadow-sm flex flex-col">
-            <div className="w-full h-52 sm:h-60 bg-secondary relative">
-              <RouteMap
-                pickupCoords={pickupCoords}
-                dropoffCoords={dropoffCoords}
-              />
-              <div className="absolute inset-0 bg-background/10"></div>
-            </div>
-
-            <div className="p-4 sm:p-6 bg-card flex flex-col">
-              <div className="grid grid-cols-3 gap-2 sm:gap-4 border-b border-border/50 pb-4 sm:pb-5 mb-4">
-                {routeStats.map((stat, i) => (
-                  <div key={i} className="flex flex-col gap-0.5 sm:gap-1">
-                    <span className="text-[11px] sm:text-[12px] font-bold text-muted-foreground truncate">
-                      {stat.label}
-                    </span>
-                    <span
-                      className={`text-[13px] sm:text-[15px] font-bold truncate ${stat.isHighlight ? "text-emerald-600" : "text-foreground"}`}
-                    >
-                      {stat.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="flex items-center gap-2 text-[11px] sm:text-[12px] font-medium text-muted-foreground">
-                <LuInfo className="w-3.5 h-3.5 shrink-0" /> Prices and times are
-                estimates and may vary.
-              </div>
-            </div>
-          </div>
+          <RouteOverviewCard
+            pickupCoords={pickupCoords}
+            dropoffCoords={dropoffCoords}
+            bestPrice={bestPrice}
+          />
         </div>
 
-        {/* Right Column: Courier Options */}
-        <div className="xl:col-span-7 flex flex-col gap-6">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex flex-col">
-              <h3 className="font-bold text-[16px] sm:text-[17px] text-foreground">
-                Available Options
-              </h3>
-              <p className="text-xs sm:text-[13px] font-medium text-muted-foreground mt-0.5 sm:mt-1">
-                We found {quotes.length} courier services for your delivery.
-              </p>
-            </div>
-            <div className="flex flex-col gap-1.5 shrink-0 w-full sm:w-auto">
-              <span className="text-[11px] font-bold text-muted-foreground">
-                Sort by
-              </span>
-              <Select defaultValue="Price (Low to High)">
-                <SelectTrigger className="w-full sm:w-52 h-10 border-border bg-card rounded-xl text-[13px] font-bold shadow-sm">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="Price (Low to High)">
-                    Price (Low to High)
-                  </SelectItem>
-                  <SelectItem value="Fastest Delivery">
-                    Fastest Delivery
-                  </SelectItem>
-                  <SelectItem value="Highest Rated">Highest Rated</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-4">
-            {quotes.length > 0 ? (
-              quotes.map((courier) => (
-                <CourierCard
-                  key={courier.id}
-                  courier={courier}
-                  bestPrice={bestPrice}
-                />
-              ))
-            ) : (
-              <div className="flex flex-col items-center justify-center py-16 px-4 text-center border-2 border-dashed border-border/60 rounded-[1.5rem] bg-secondary/20 w-full mt-2">
-                <div className="w-16 h-16 bg-background border border-border/50 rounded-full flex items-center justify-center mb-4 shadow-sm">
-                  <LuMapPin className="w-7 h-7 text-muted-foreground/60" />
-                </div>
-                <h3 className="text-[17px] font-bold text-foreground mb-2">
-                  No quotes yet
-                </h3>
-                <p className="text-[14px] font-medium text-muted-foreground max-w-70">
-                  Enter your pickup and drop-off locations above to start
-                  comparing delivery prices.
-                </p>
-              </div>
-            )}
-          </div>
-
-          {/* Save Route Banner */}
-          {/* <div className="bg-secondary/40 border border-border/60 rounded-[1.5rem] p-6 flex flex-col sm:flex-row items-center justify-between gap-6 mt-2 shadow-sm hover:shadow-md transition-all">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-full bg-background border border-border flex items-center justify-center shrink-0 shadow-sm">
-                <LuBookmark className="w-5 h-5 text-primary" />
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-bold text-[16px] text-foreground">
-                  Save this route
-                </h3>
-                <p className="text-[13px] font-medium text-muted-foreground mt-0.5">
-                  Sign in to save this route and get price drop alerts.
-                </p>
-              </div>
-            </div>
-            <Button
-              variant="outline"
-              className="h-11 px-6 rounded-xl font-bold border-border bg-background hover:bg-secondary text-primary shadow-sm shrink-0 w-full sm:w-auto"
-            >
-              Sign in to save
-            </Button>
-          </div> */}
-        </div>
+        {/* Right Column: Courier Options with Sorting */}
+        <CourierQuotesList quotes={quotes} bestPrice={bestPrice} />
       </div>
     </div>
   );
