@@ -99,7 +99,9 @@ export const ComparePage = () => {
         },
         (error) => {
           console.error("Browser blocked us:", error.message);
-          toast.error("Could not access your location. Please check browser permissions.");
+          toast.error(
+            "Could not access your location. Please check browser permissions.",
+          );
         },
         {
           enableHighAccuracy: true,
@@ -141,7 +143,6 @@ export const ComparePage = () => {
           <RouteOverviewCard
             pickupCoords={pickupCoords}
             dropoffCoords={dropoffCoords}
-            bestPrice={bestPrice}
           />
         </div>
 

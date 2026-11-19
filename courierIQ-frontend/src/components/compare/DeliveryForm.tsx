@@ -1,4 +1,4 @@
-import { LuMapPin, LuPlus, LuChevronRight } from "react-icons/lu";
+import { LuMapPin, LuChevronRight } from "react-icons/lu";
 import { Button } from "@/components/ui/button";
 import { LocationInput } from "@/components/shared/LocationInput";
 import type { Dispatch, SetStateAction } from "react";
@@ -6,8 +6,12 @@ import type { Dispatch, SetStateAction } from "react";
 interface DeliveryFormProps {
   userInput: { pickup: string; dropOff: string };
   setUserInput: Dispatch<SetStateAction<{ pickup: string; dropOff: string }>>;
-  setPickupCoords: (coords: { latitude: number; longitude: number } | null) => void;
-  setDropoffCoords: (coords: { latitude: number; longitude: number } | null) => void;
+  setPickupCoords: (
+    coords: { latitude: number; longitude: number } | null,
+  ) => void;
+  setDropoffCoords: (
+    coords: { latitude: number; longitude: number } | null,
+  ) => void;
   onCompare: () => void;
   loading: boolean;
   onGetCurLocation: () => void;
@@ -78,16 +82,6 @@ export const DeliveryForm = ({
             }}
           />
         </div>
-
-        <Button
-          type="button"
-          className="text-[13px] font-bold text-primary-foreground flex items-center gap-1.5 hover:underline w-fit mt-1"
-        >
-          <div className="w-5 h-5 rounded-full border-2 border-primary flex items-center justify-center">
-            <LuPlus className="w-3.5 h-3.5" />
-          </div>
-          Add stop
-        </Button>
       </div>
 
       <div className="h-px w-full bg-border/60 my-6"></div>
@@ -109,4 +103,3 @@ export const DeliveryForm = ({
     </div>
   );
 };
-

@@ -21,6 +21,29 @@ const SORT_OPTIONS = [
   { value: "Highest Rated", label: "Highest Rated" },
 ];
 
+/**
+ * Normalizes time strings like "~4h 30m", "~45m", "~ 2h" into total minutes.
+ */
+const parseTimeToMinutes = (timeStr?: string): number => {
+  if (!timeStr || typeof timeStr !== "string") return 0;
+
+  // Extract hours if present (e.g. "~4h", "2 h")
+  const hoursMatch = timeStr.match(/(\d+)\s*h/i);
+  const hours = hoursMatch ? parseInt(hoursMatch[1], 10) : 0;
+
+  // Extract minutes if present (e.g. "30m", "45 mins")
+  const minutesMatch = timeStr.match(/(\d+)\s*m/i);
+  const minutes = minutesMatch ? parseInt(minutesMatch[1], 10) : 0;
+
+  // Fallback: If neither "h" nor "m" matched, grab any standalone number
+  if (!hoursMatch && !minutesMatch) {
+    const fallbackMatch = timeStr.match(/\d+(\.\d+)?/);
+    return fallbackMatch ? parseFloat(fallbackMatch[0]) : 0;
+  }
+
+  return hours * 60 + minutes;
+};
+
 export const CourierQuotesList = ({
   quotes,
   bestPrice,
@@ -35,7 +58,8 @@ export const CourierQuotesList = ({
       }
       if (sortBy === "Fastest Delivery") {
         return (
-          (parseFloat(a.estimatedTime) || 0) - (parseFloat(b.estimatedTime) || 0)
+          parseTimeToMinutes(a.estimatedTime) -
+          parseTimeToMinutes(b.estimatedTime)
         );
       }
       if (sortBy === "Highest Rated") {
@@ -111,4 +135,3 @@ export const CourierQuotesList = ({
     </div>
   );
 };
-

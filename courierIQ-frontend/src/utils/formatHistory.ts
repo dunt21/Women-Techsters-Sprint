@@ -28,6 +28,7 @@ export const formatHistoryData = (rawHistory: any[]) => {
       couriers: searchItem.CourierQuotes,
       couriersCount: searchItem.CourierQuotes.length,
       bestPrice: minPrice !== Infinity ? `GH₵${minPrice}` : "N/A",
+      createdAt: searchItem.createdAt,
       
       // DashboardPage Specific Fields
       title: `${searchItem.CourierQuotes.length} Couriers Compared`,
